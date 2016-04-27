@@ -1,4 +1,4 @@
-## Using Retrofit 2.0 on an RSS Feed. Mapping HTTP responses from XML to Java objects
+### Using Retrofit 2.0 on an RSS Feed. Mapping HTTP responses from XML to Java objects
 
 Here's a link to the RSS Feed I'm using for this demo:
 http://www.legislature.mi.gov/documents/publications/RssFeeds/billupdate.xml
