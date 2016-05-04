@@ -20,6 +20,24 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".BillDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".FavoriteBillsActivity"
+            android:label="@string/favorites_label"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity"/>
+        </activity>
+        <provider
+            android:name=".database.MyContentProvider"
+            android:authorities="com.example.josh.retrofitrssdemo.provider"
+            android:enabled="true"
+            android:exported="false"
+            android:syncable="true"/>
     </application>
 
 </manifest>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.josh.retrofitrssdemo.BillDetailActivity;
 import com.example.josh.retrofitrssdemo.R;
 import com.example.josh.retrofitrssdemo.model.Item;
 
@@ -17,18 +18,17 @@ import java.util.List;
 /**
  * Created by Josh on 4/21/2016.
  */
-public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder>{
+public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
 
     Context context;
     LayoutInflater inflater;
-    List<Item> itemList;
+    private List<Item> itemList;
 
-    public RssAdapter(Context context, List<Item> itemList) {
+    public RssAdapter(Context context, List<Item> items) {
         this.context = context;
-        this.itemList = itemList;
+        this.itemList = items;
         inflater = LayoutInflater.from(context);
     }
-
 
     @Override
     public MyRssHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,6 +42,16 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder>{
         holder.billTitle.setText(billItem.getTitle());
         holder.billDescription.setText(billItem.getDescription());
         holder.billPubDate.setText(billItem.getPubDate());
+
+        holder.billTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Intent intent = new Intent(context, BillDetailActivity.class);
+                intent.putExtra(BillDetailActivity.EXTRA_BILL, itemList.get(position));
+                context.startActivity(intent);
+            }
+        });
 
         holder.billDescription.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,13 +75,12 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder>{
         public TextView billDescription;
         public TextView billPubDate;
 
-        public MyRssHolder(View itemView){
+        public MyRssHolder(View itemView) {
             super(itemView);
-            billTitle = (TextView)itemView.findViewById(R.id.bill_title);
-            billDescription = (TextView)itemView.findViewById(R.id.bill_description);
-            billPubDate = (TextView)itemView.findViewById(R.id.bill_pub_date);
+            billTitle = (TextView) itemView.findViewById(R.id.bill_title);
+            billDescription = (TextView) itemView.findViewById(R.id.bill_description);
+            billPubDate = (TextView) itemView.findViewById(R.id.bill_pub_date);
 
         }
     }
-
 }

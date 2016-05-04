@@ -1,5 +1,6 @@
 package com.example.josh.retrofitrssdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -34,11 +35,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         recyclerView = (RecyclerView)findViewById(R.id.recycler);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.legislature.mi.gov/")
@@ -87,8 +86,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_favorites) {
+            Intent intent = new Intent(MainActivity.this, FavoriteBillsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
