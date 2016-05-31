@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+
+    <ImageButton
+        android:id="@+id/dialog_save"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        style="?android:attr/borderlessButtonStyle"
+        android:src="@drawable/ic_favorite_empty"/>
+
+    <TextView
+        android:id="@+id/dialog_text_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignBottom="@+id/dialog_save"
+        android:layout_toRightOf="@+id/dialog_save"
+        android:textSize="20sp"
+        android:textColor="@color/md_black_1000"
+        android:text="Save"/>
+
+    <ImageButton
+        android:id="@+id/dialog_share"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_below="@+id/dialog_save"
+        android:src="@drawable/ic_share"
+        android:tint="@color/md_pink_A200"/>
+
+    <TextView
+        android:id="@+id/dialog_text_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignBottom="@+id/dialog_share"
+        android:layout_toRightOf="@+id/dialog_share"
+        android:textSize="20sp"
+        android:textColor="@color/md_black_1000"
+        android:text="Share"/>
+
+    <ImageButton
+        android:id="@+id/dialog_browser"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dialog_share"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:src="@drawable/ic_browser_black"
+        android:tint="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/dialog_text_browser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignBottom="@+id/dialog_browser"
+        android:layout_toRightOf="@+id/dialog_browser"
+        android:textSize="20sp"
+        android:textColor="@color/md_black_1000"
+        android:text="Open in browser"/>
+
+</RelativeLayout>
