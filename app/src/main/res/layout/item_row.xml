@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/tools"
     android:background="?attr/selectableItemBackground"
     android:clickable="true">
 
@@ -11,45 +11,123 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_margin"
-        app:cardBackgroundColor="@android:color/white">
+        card_view:cardCornerRadius="2dp">
 
         <RelativeLayout
+            android:id="@+id/top_layout_item_row"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:background="?android:selectableItemBackground"
+            android:animateLayoutChanges="true">
 
             <TextView
                 android:id="@+id/bill_title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="Bill Title"
+                android:paddingBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/bill_title"
                 android:textColor="#000"
-                android:textSize="25sp"/>
+                android:textSize="24sp"/>
+
+            <!--<ImageButton-->
+            <!--android:id="@+id/heart_saved"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/ic_favorite_empty"-->
+            <!--android:padding="4dp"-->
+            <!--android:background="@android:color/transparent"-->
+            <!--android:layout_alignParentRight="true"/>-->
+
+            <TextView
+                android:id="@+id/bill_pub_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/bill_title"
+                android:paddingBottom="4dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:paddingTop="4dp"
+                android:text="@string/publication_date"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"/>
+
+            <View
+                android:id="@+id/item_row_divider_line"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/bill_pub_date"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/textview_divider"/>
 
             <TextView
                 android:id="@+id/bill_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/bill_pub_date"
+                android:layout_marginBottom="6dp"
+                android:paddingBottom="6dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:paddingTop="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="4dp"
-                android:paddingBottom="8dp"
-                android:text="Bill Description"
+                android:text="@string/bill_description"
                 android:textColor="#000"
                 android:textSize="14sp"/>
 
-            <TextView
-                android:id="@+id/bill_pub_date"
-                android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/alert_dialog_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_more_vert_black_24dp"
+                android:tint="@color/md_grey_500"/>
+
+            <RelativeLayout
+                android:id="@+id/rlExpandArea"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Publication Date"
-                android:paddingTop="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="4dp"
-                android:paddingBottom="8dp"
-                android:textColor="@android:color/black"
-                android:layout_below="@+id/bill_title"/>
+                android:layout_below="@+id/bill_description"
+                android:visibility="gone">
+
+                <ImageButton
+                    android:id="@+id/heart_saved"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_below="@+id/bill_description"
+                    android:layout_marginRight="16dp"
+                    android:layout_toLeftOf="@+id/share_button"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_favorite_empty"
+                    android:tint="@color/colorPrimary"/>
+
+                <ImageButton
+                    android:id="@+id/share_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/bill_description"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_share"
+                    android:tint="@color/md_pink_A200"/>
+
+                <ImageButton
+                    android:id="@+id/open_in_browser_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/bill_description"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_browser_black"
+                    android:tint="@color/colorPrimary"/>
+            </RelativeLayout>
 
         </RelativeLayout>
 

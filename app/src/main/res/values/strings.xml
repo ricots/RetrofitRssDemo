@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">Retrofit Rss Demo</string>
     <string name="action_settings">Settings</string>
+    <string name="favorites_label">Favorites</string>
+    <string name="action_favorites">Favorites</string>
+    <string name="menu_browser">Open in browser</string>
+    <string name="action_search">Search</string>
+    <string name="search_hint">Search favorites</string>
+    <string name="bill_title">Bill Title</string>
+    <string name="publication_date">Publication Date</string>
+    <string name="bill_description">Bill Description</string>
+    <string name="action_tabs">TabLayoutTest</string>
+    <string name="action_transitions">Animations Test</string>
+    <string name="dialog_save">Add to favorites</string>
+    <string name="dialog_unsave">Remove from favorites</string>
 </resources>

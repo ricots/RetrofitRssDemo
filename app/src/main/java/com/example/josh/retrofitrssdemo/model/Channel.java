@@ -13,7 +13,7 @@ import java.util.List;
 public class Channel {
 
     @ElementList(name = "item", inline = true)
-    private List<Item> mItems;
+    public List<Item> mItems;
 
     @Element(required = false)
     private String pubDate;
@@ -41,4 +41,7 @@ public class Channel {
         return mItems;
     }
 
+    public void setItems(List<Item> items) {
+        mItems = items;
+    }
 }
