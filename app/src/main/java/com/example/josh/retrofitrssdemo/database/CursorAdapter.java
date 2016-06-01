@@ -5,10 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.josh.retrofitrssdemo.BillDetailActivity;
 import com.example.josh.retrofitrssdemo.R;
@@ -21,13 +21,13 @@ import java.util.List;
  */
 public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder> {
 
+    public static final String TAG = CursorAdapter.class.getSimpleName();
     LayoutInflater inflater;
     Context context;
     public List<Item> mItemList;
     Item mItem;
     FavoritesDataSource dataSource;
-    String charText = "";
-    private int expandedPosition = -1;
+    //private int expandedPosition = -1;
 
     public CursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
@@ -37,7 +37,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
 
     @Override
     public void onBindViewHolder(final DatabaseViewHolder viewHolder, final Cursor cursor) {
-        int position = getCursor().getPosition();
+        final int position = getCursor().getPosition();
         int id = cursor.getInt(0);
         String title = cursor.getString(1);
         String description = cursor.getString(2);
@@ -57,44 +57,36 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         START:
         Expandable Recyclerview
          */
-        if (position == expandedPosition) {
-            viewHolder.relExpandAreaFav.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.relExpandAreaFav.setVisibility(View.GONE);
-        }
-        viewHolder.relTopAreaFav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                // checking for an expanded view, collapse if you find one
-                if (expandedPosition >= 0) {
-                    int prev = expandedPosition;
-                    notifyItemChanged(prev);
-                }
-                // set the current position to "expanded"
-                expandedPosition = viewHolder.getAdapterPosition();
-                notifyItemChanged(expandedPosition);
-            }
-        });
+//        if (position == expandedPosition) {
+//            viewHolder.relExpandAreaFav.setVisibility(View.VISIBLE);
+//        } else {
+//            viewHolder.relExpandAreaFav.setVisibility(View.GONE);
+//        }
+//        viewHolder.relTopAreaFav.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(final View v) {
+//                if (expandedPosition >= 0) {
+//                    int prev = expandedPosition;
+//                    notifyItemChanged(prev);
+//                }
+//                expandedPosition = viewHolder.getAdapterPosition();
+//                notifyItemChanged(expandedPosition);
+//            }
+//        });
         /*
         END:
         Expandable Recyclerview
          */
 
 
-        // Un-Saving/saving from within FavoriteBillsActivity
+        // Removing Items from Favorites
         //TODO: Handle proper item removal. NotifyItemChanged? Once Removed from favorites ...
-        // Click heartImageButton --> AlertDialog asking are you sure you want to remove this item?
-            // If yes, remove bill from database and update the list --> notifyItemChanged?
         viewHolder.trashImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Clicked: " + position);
                 final int position = viewHolder.getAdapterPosition();
-                /*
-                May not need to even call ifBillExists. Just set heartImageButton as full and
-                in the onClick, show an alertDialog with "are you sure you want to delete this item?".
-                Or add a trash Icon instead**
-                 */
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
                 builder.setMessage("Delete from your Favorites?")
                         .setCancelable(true)
                         .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -109,38 +101,15 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                                 dataSource.removeBill(item.getTitle());
                                 notifyItemRemoved(position);
                                 //TODO: Fix NotifyItemRangeChanged
-                                //http://stackoverflow.com/questions/26517855/using-the-recyclerview-with-a-database
-                                notifyItemRangeChanged(position, getItemCount());
-                                getCursor().moveToPosition(position);
-                                Toast.makeText(context, "Deleted: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-
-                                //notifyItemChanged(position);
-
+                                //notifyItemRangeChanged(position, getItemCount());
+                                Log.d(TAG, "Count: " + cursor.getCount());
                             }
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
 
-
-//                if (dataSource.ifBillExists(item.getTitle())){
-//                    viewHolder.heartImageButton.setImageResource(R.drawable.ic_favorite_empty);
-//                    dataSource.removeBill(item.getTitle());
-//
-//                    Snackbar snackbar = Snackbar.make(v, "Removed from Favorites", Snackbar.LENGTH_LONG);
-//                    snackbar.show();
-//                } else {
-//                    viewHolder.heartImageButton.setImageResource(R.drawable.ic_favorite_full);
-//                    dataSource.insertBill(item);
-//                    Snackbar snackbar = Snackbar.make(v, "Re-Added " + item.getTitle() + " To Favorites", Snackbar.LENGTH_SHORT);
-//                    snackbar.show();
-//                }
             }
         });
-//        if (dataSource.ifBillExists(item.getTitle())) {
-//            viewHolder.heartImageButton.setImageResource(R.drawable.ic_favorite_full);
-//        } else {
-//            viewHolder.heartImageButton.setImageResource(R.drawable.ic_favorite_empty);
-//        }
 
         // Share bill:
         viewHolder.shareImageButton.setOnClickListener(new View.OnClickListener() {

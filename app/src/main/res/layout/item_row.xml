@@ -87,8 +87,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_toLeftOf="@+id/share_button"
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_favorite_empty"
-                android:tint="@color/colorPrimary"/>
+                android:src="@drawable/ic_favorite_empty"/>
 
             <ImageButton
                 android:id="@+id/share_button"

@@ -38,17 +38,6 @@ public class FavoriteBillsActivity extends AppCompatActivity {
     private List<Item> listItem;
     private final static String TAG = FavoriteBillsActivity.class.getSimpleName();
 
-
-    //TODO: Include share and save ImageButtons on FavoritesActivity?
-    // Handle in CursorAdapter or DatabaseViewHolder?
-    // Makes it difficult to distinguish which activity user is in?
-    // Option to apply a separate theme to Favorites Activity?
-        // Set this in Manifest
-    // **Expandable Cardview**
-    //TODO: Default sort order? By order added, by pubDate etc?
-    //TODO: SearchView
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +48,6 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
 
         dataSource = new FavoritesDataSource(getApplicationContext());
         dataSource.open(true);
@@ -72,8 +60,10 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         mAdapter = new CursorAdapter(this, cursor);
 
         recyclerView.setAdapter(mAdapter);
-        // Delete Later:
+        // ?
         mAdapter.notifyDataSetChanged();
+
+
     }
 
     @Override
@@ -87,10 +77,18 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         super.onStart();
         cursor = dataSource.getAllBills();
         mAdapter.swapCursor(cursor);
-        // Delete Later:
+        // ?
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // ?
+        cursor.getCount();
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

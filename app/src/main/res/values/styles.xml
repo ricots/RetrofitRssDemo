@@ -8,9 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">@color/colorPrimary</item>
+        <item name="android:textColor">@color/md_grey_500</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
     </style>
 
     <style name="myPopupMenuTextAppearanceSmall" parent="@android:style/TextAppearance.DeviceDefault.Widget.PopupMenu.Small">

@@ -19,7 +19,6 @@
             android:id="@+id/rel_top_area_fav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="true"
             android:background="?android:selectableItemBackground"
             android:animateLayoutChanges="true">
 
@@ -70,18 +69,19 @@
                 android:textColor="@color/md_black_1000"
                 android:textSize="14sp"/>
 
-            <RelativeLayout
-                android:id="@+id/rlExpandAreaFav"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/bill_fav_description"
-                android:visibility="gone">
+            <!--<RelativeLayout-->
+                <!--android:id="@+id/rlExpandAreaFav"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/bill_fav_description"-->
+                <!--android:visibility="gone">-->
 
                 <ImageButton
                     android:id="@+id/fav_trash_button"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     style="?android:attr/borderlessButtonStyle"
+                    android:layout_below="@+id/bill_fav_description"
                     android:layout_marginRight="16dp"
                     android:layout_toLeftOf="@+id/fav_share_button"
                     android:background="@android:color/transparent"
@@ -94,10 +94,11 @@
                     android:layout_height="48dp"
                     android:layout_alignParentRight="true"
                     style="?android:attr/borderlessButtonStyle"
+                    android:layout_below="@+id/bill_fav_description"
                     android:layout_marginRight="16dp"
                     android:src="@drawable/ic_share"
                     android:tint="@color/md_pink_A200"/>
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
         </RelativeLayout>
 
