@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.josh.retrofitrssdemo.R;
@@ -32,11 +31,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
     List<Item> itemList;
     public static final String TAG = RssAdapter.class.getSimpleName();
 
-    private int expandedPosition = -1;
-    private int collapsedPosition = 0;
-    private int mOriginalHeight = 0;
-    private boolean isViewExpanded = false;
-
     public RssAdapter(Context context, List<Item> items) {
         this.context = context;
         this.itemList = items;
@@ -52,7 +46,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
     @Override
     public MyRssHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_row, parent, false);
-
         // Where should this be called?
         dataSource = new FavoritesDataSource(context);
         dataSource.open(false);
@@ -118,14 +111,8 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
             }
         });
         /*
-        Experimenting using an AlertDialog vs. setting click listeners on the item_row.xml
-        Probably best to keep code as implemented above. Important to quickly visualize which items are saved
-        and quickly unsave/save items while scrolling through the list.
-        --> Is it safe to do all this within the adapter?
-         */
-
-        /*
         START:
+        Experimenting with AlertDialog.
         Code snippet below adds working save functionality to AlertDialog.
         See: http://stackoverflow.com/questions/8533394/icons-in-a-list-dialog for Adapter alternative.
          */
@@ -167,37 +154,9 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
                 /*
                 END:
                 Code snippet above adds working save functionality to AlertDialog.
-                See: http://stackoverflow.com/questions/8533394/icons-in-a-list-dialog for Adapter alternative.
                  */
             }
         });
-        /*
-        START:
-        Expandable Recyclerview Testing
-        Currently working, but only collapses when clicking on another card and not the same.
-         */
-        if (position == expandedPosition) {
-            holder.relExpandArea.setVisibility(View.VISIBLE);
-        } else {
-            holder.relExpandArea.setVisibility(View.GONE);
-        }
-        holder.relTopArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                // checking for an expanded view, collapse if you find one
-                if (expandedPosition >= 0) {
-                    int prev = expandedPosition;
-                    notifyItemChanged(prev);
-                }
-                // set the current position to "expanded"
-                expandedPosition = holder.getAdapterPosition();
-                notifyItemChanged(expandedPosition);
-            }
-        });
-        /*
-        END:
-        Expandable Recyclerview Testing
-         */
     }
 
     @Override
@@ -210,7 +169,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
 
         public TextView billTitle, billDescription, billPubDate;
         public ImageButton favoriteButton, shareButton, browserButton, dialogButton;
-        public RelativeLayout relExpandArea, relTopArea;
 
         public MyRssHolder(View itemView) {
             super(itemView);
@@ -221,9 +179,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
             shareButton = (ImageButton) itemView.findViewById(R.id.share_button);
             browserButton = (ImageButton) itemView.findViewById(R.id.open_in_browser_button);
             dialogButton = (ImageButton) itemView.findViewById(R.id.alert_dialog_button);
-            relExpandArea = (RelativeLayout) itemView.findViewById(R.id.rlExpandArea);
-            relTopArea = (RelativeLayout)itemView.findViewById(R.id.top_layout_item_row);
-
 
         }
     }

@@ -27,6 +27,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
     Item mItem;
     FavoritesDataSource dataSource;
     String charText = "";
+    private int expandedPosition = -1;
 
     public CursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
@@ -36,6 +37,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
 
     @Override
     public void onBindViewHolder(final DatabaseViewHolder viewHolder, final Cursor cursor) {
+        int position = getCursor().getPosition();
         int id = cursor.getInt(0);
         String title = cursor.getString(1);
         String description = cursor.getString(2);
@@ -51,6 +53,33 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
 
         dataSource = new FavoritesDataSource(context);
         dataSource.open(false);
+        /*
+        START:
+        Expandable Recyclerview
+         */
+        if (position == expandedPosition) {
+            viewHolder.relExpandAreaFav.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.relExpandAreaFav.setVisibility(View.GONE);
+        }
+        viewHolder.relTopAreaFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                // checking for an expanded view, collapse if you find one
+                if (expandedPosition >= 0) {
+                    int prev = expandedPosition;
+                    notifyItemChanged(prev);
+                }
+                // set the current position to "expanded"
+                expandedPosition = viewHolder.getAdapterPosition();
+                notifyItemChanged(expandedPosition);
+            }
+        });
+        /*
+        END:
+        Expandable Recyclerview
+         */
+
 
         // Un-Saving/saving from within FavoriteBillsActivity
         //TODO: Handle proper item removal. NotifyItemChanged? Once Removed from favorites ...
