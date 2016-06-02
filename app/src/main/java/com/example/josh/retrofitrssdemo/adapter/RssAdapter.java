@@ -75,8 +75,8 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
                 } else {
                     holder.favoriteButton.setImageResource(R.drawable.ic_favorite_full);
                     dataSource.insertBill(billItem);
-                    Snackbar snackbar = Snackbar.make(v, "Added " + billItem.getTitle() + " To Favorites!", Snackbar.LENGTH_SHORT);
-                    snackbar.show();
+                    //Snackbar snackbar = Snackbar.make(v, "Added " + billItem.getTitle() + " To Favorites!", Snackbar.LENGTH_SHORT);
+                    //snackbar.show();
                 }
             }
         });

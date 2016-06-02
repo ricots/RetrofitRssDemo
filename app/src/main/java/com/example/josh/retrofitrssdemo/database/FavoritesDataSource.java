@@ -59,7 +59,8 @@ public class FavoritesDataSource {
     }
 
     public int removeBill(String title){
-        return database.delete(DatabaseHelper.TABLE_FAVORITES, DatabaseHelper.COLUMN_BILL_TITLE + "=? ", new String[]{title}); // + title, null);
+
+        return database.delete(DatabaseHelper.TABLE_FAVORITES, DatabaseHelper.COLUMN_BILL_TITLE + "=?", new String[]{title}); // + title, null);
     }
 
     public Cursor getAllBills(){

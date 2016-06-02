@@ -10,11 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.josh.retrofitrssdemo.BillDetailActivity;
 import com.example.josh.retrofitrssdemo.R;
 import com.example.josh.retrofitrssdemo.model.Item;
-
-import java.util.List;
 
 /**
  * Created by Josh on 4/22/2016.
@@ -24,8 +21,6 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
     public static final String TAG = CursorAdapter.class.getSimpleName();
     LayoutInflater inflater;
     Context context;
-    public List<Item> mItemList;
-    Item mItem;
     FavoritesDataSource dataSource;
     //private int expandedPosition = -1;
 
@@ -37,7 +32,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
 
     @Override
     public void onBindViewHolder(final DatabaseViewHolder viewHolder, final Cursor cursor) {
-        final int position = getCursor().getPosition();
+        //final int position = getCursor().getPosition();
         int id = cursor.getInt(0);
         String title = cursor.getString(1);
         String description = cursor.getString(2);
@@ -46,7 +41,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         String guid = cursor.getString(5);
 
         final Item item = new Item(title, description, pubDate, link, guid);
-
+        Log.d(TAG, "Count: " + getItemCount());
         viewHolder.title.setText(item.getTitle());
         viewHolder.description.setText(item.getDescription());
         viewHolder.pubDate.setText(item.getPubDate());
@@ -83,9 +78,9 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         //TODO: Handle proper item removal. NotifyItemChanged? Once Removed from favorites ...
         viewHolder.trashImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Clicked: " + position);
+            public void onClick(final View v) {
                 final int position = viewHolder.getAdapterPosition();
+                Log.d(TAG, "Clicked: " + position);
                 AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
                 builder.setMessage("Delete from your Favorites?")
                         .setCancelable(true)
@@ -100,14 +95,12 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                             public void onClick(DialogInterface dialog, int which) {
                                 dataSource.removeBill(item.getTitle());
                                 notifyItemRemoved(position);
-                                //TODO: Fix NotifyItemRangeChanged
-                                //notifyItemRangeChanged(position, getItemCount());
-                                Log.d(TAG, "Count: " + cursor.getCount());
+                                // TODO: Fix notifyItemRangeChanged
+                                notifyItemRangeChanged(position, getItemCount());
                             }
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-
             }
         });
 
@@ -123,15 +116,14 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
             }
         });
         // Delete in future
-        viewHolder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, BillDetailActivity.class);
-                intent.putExtra(BillDetailActivity.EXTRA_BILL, item);
-                context.startActivity(intent);
-            }
-        });
-
+//        viewHolder.root.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(context, BillDetailActivity.class);
+//                intent.putExtra(BillDetailActivity.EXTRA_BILL, item);
+//                context.startActivity(intent);
+//            }
+//        });
     }
 
     @Override

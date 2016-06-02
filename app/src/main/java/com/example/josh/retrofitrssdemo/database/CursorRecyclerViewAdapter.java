@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 /**
  * Created by Josh on 4/22/2016.
@@ -33,14 +32,19 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         return mCursor;
     }
 
+//    @Override
+//    public int getItemCount() {
+//        if (mDataValid && mCursor != null) {
+//            return mCursor.getCount();
+//        } else {
+//            return 0;
+//        }
+//    }
+
+
     @Override
     public int getItemCount() {
-        if (mDataValid && mCursor != null) {
-            return mCursor.getCount();
-        } else {
-            return 0;
-        }
-
+        return (null != mCursor ? mCursor.getCount() : 0);
     }
 
     @Override
@@ -60,7 +64,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(VH viewHolder, int position) {
-        Log.d(TAG, "Count: " + getCursor().getCount());
+
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
         }
@@ -105,8 +109,10 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         } else {
             mRowIdColumn = -1;
             mDataValid = false;
-            notifyDataSetChanged();
-            //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
+            //notifyDataSetChanged();
+            notifyItemRangeChanged(0, getItemCount());
+
+
         }
         return oldCursor;
     }
@@ -124,7 +130,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             super.onInvalidated();
             mDataValid = false;
             notifyDataSetChanged();
-            //There is no notifyDataSetInvalidated() method in RecyclerView.Adapter
+            notifyItemRangeChanged(0, getItemCount());
         }
     }
 

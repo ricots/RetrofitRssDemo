@@ -21,10 +21,8 @@ import android.widget.Toast;
 
 import com.example.josh.retrofitrssdemo.database.CursorAdapter;
 import com.example.josh.retrofitrssdemo.database.FavoritesDataSource;
-import com.example.josh.retrofitrssdemo.model.Item;
 
 import java.text.Normalizer;
-import java.util.List;
 
 /**
  * Created by Josh on 4/22/2016.
@@ -35,8 +33,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
     FavoritesDataSource dataSource;
     Cursor cursor;
     CursorAdapter mAdapter;
-    private List<Item> listItem;
-    private final static String TAG = FavoriteBillsActivity.class.getSimpleName();
+    public final static String TAGG = FavoriteBillsActivity.class.getSimpleName();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,13 +52,9 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
         cursor = dataSource.getAllBills();
         mAdapter = new CursorAdapter(this, cursor);
-
         recyclerView.setAdapter(mAdapter);
-        // ?
-        mAdapter.notifyDataSetChanged();
 
 
     }
@@ -77,17 +70,13 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         super.onStart();
         cursor = dataSource.getAllBills();
         mAdapter.swapCursor(cursor);
-        // ?
-        mAdapter.notifyDataSetChanged();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // ?
-        cursor.getCount();
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -99,7 +88,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(TAG, "onQueryTextSubmit");
+                Log.d(TAGG, "onQueryTextSubmit");
                 cursor  = dataSource.searchTasks(query);
                 if (cursor == null){
                     Toast.makeText(FavoriteBillsActivity.this, "No Records Found", Toast.LENGTH_SHORT).show();
@@ -112,7 +101,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d(TAG, "onQueryTextSubmit");
+                Log.d(TAGG, "onQueryTextSubmit");
                 cursor = dataSource.searchTasks(newText);
                 if (cursor != null){
                     mAdapter.swapCursor(cursor);
