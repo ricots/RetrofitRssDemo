@@ -18,7 +18,8 @@ import com.example.josh.retrofitrssdemo.model.Item;
  */
 public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder> {
 
-    public static final String TAG = CursorAdapter.class.getSimpleName();
+    // TODO CursorLoader?
+    public static final String TAG = "CursAdapterItemCount";
     LayoutInflater inflater;
     Context context;
     FavoritesDataSource dataSource;
@@ -41,7 +42,9 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         String guid = cursor.getString(5);
 
         final Item item = new Item(title, description, pubDate, link, guid);
+
         Log.d(TAG, "Count: " + getItemCount());
+
         viewHolder.title.setText(item.getTitle());
         viewHolder.description.setText(item.getDescription());
         viewHolder.pubDate.setText(item.getPubDate());
@@ -93,16 +96,20 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                // remove the element at particular position from the list
                                 dataSource.removeBill(item.getTitle());
+                                // notifies RecyclerView Adapter that data in adapter has been removed at a particular position
                                 notifyItemRemoved(position);
-                                // TODO: Fix notifyItemRangeChanged
+                                // TODO: Fix notifyItemRangeChanged:
                                 notifyItemRangeChanged(position, getItemCount());
+                                swapCursor(dataSource.getAllBills());
                             }
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
         });
+
 
         // Share bill:
         viewHolder.shareImageButton.setOnClickListener(new View.OnClickListener() {
@@ -115,15 +122,14 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                 context.startActivity(shareIntent);
             }
         });
-        // Delete in future
-//        viewHolder.root.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(context, BillDetailActivity.class);
-//                intent.putExtra(BillDetailActivity.EXTRA_BILL, item);
-//                context.startActivity(intent);
-//            }
-//        });
+    }
+
+    @Override
+    public int getItemCount() {
+        if (getCursor() == null || getCursor().isClosed()){
+            return 0;
+        }
+        return getCursor().getCount();
     }
 
     @Override

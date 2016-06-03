@@ -4,18 +4,36 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
-
+/*
+ * Copyright (C) 2014 skyfish.jy@gmail.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 /**
  * Created by Josh on 4/22/2016.
  */
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
 
     private Context mContext;
+
     private Cursor mCursor;
+
     private boolean mDataValid;
+
     private int mRowIdColumn;
+
     private DataSetObserver mDataSetObserver;
-    public static final String TAG = CursorRecyclerViewAdapter.class.getSimpleName();
 
     public CursorRecyclerViewAdapter(Context context, Cursor cursor) {
         mContext = context;
@@ -32,19 +50,12 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         return mCursor;
     }
 
-//    @Override
-//    public int getItemCount() {
-//        if (mDataValid && mCursor != null) {
-//            return mCursor.getCount();
-//        } else {
-//            return 0;
-//        }
-//    }
-
-
     @Override
     public int getItemCount() {
-        return (null != mCursor ? mCursor.getCount() : 0);
+        if (mDataValid && mCursor != null) {
+            return mCursor.getCount();
+        }
+        return 0;
     }
 
     @Override
@@ -64,7 +75,6 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(VH viewHolder, int position) {
-
         if (!mDataValid) {
             throw new IllegalStateException("this should only be called when the cursor is valid");
         }
@@ -105,14 +115,15 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             }
             mRowIdColumn = newCursor.getColumnIndexOrThrow("_id");
             mDataValid = true;
-            notifyDataSetChanged();
+            // notify the observers about the new cursor
+            //notifyDataSetChanged();
+            notifyItemRangeChanged(0, getItemCount());
         } else {
             mRowIdColumn = -1;
             mDataValid = false;
+            // notify the observers about the lack of a data set
             //notifyDataSetChanged();
             notifyItemRangeChanged(0, getItemCount());
-
-
         }
         return oldCursor;
     }
@@ -129,10 +140,8 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         public void onInvalidated() {
             super.onInvalidated();
             mDataValid = false;
-            notifyDataSetChanged();
+            //notifyDataSetChanged();
             notifyItemRangeChanged(0, getItemCount());
         }
     }
-
-
 }

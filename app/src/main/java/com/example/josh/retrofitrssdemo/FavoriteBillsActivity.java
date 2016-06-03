@@ -29,6 +29,7 @@ import java.text.Normalizer;
  */
 public class FavoriteBillsActivity extends AppCompatActivity {
 
+    // TODO CursorLoader?
     RecyclerView recyclerView;
     FavoritesDataSource dataSource;
     Cursor cursor;
@@ -70,12 +71,6 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         super.onStart();
         cursor = dataSource.getAllBills();
         mAdapter.swapCursor(cursor);
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
     }
 
@@ -145,6 +140,9 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             });
             AlertDialog alert = builder.create();
             alert.show();
+        }
+        if (id == R.id.action_count){
+            Toast.makeText(FavoriteBillsActivity.this, cursor.getCount() + " Items Saved", Toast.LENGTH_SHORT).show();
         }
 
         return super.onOptionsItemSelected(item);
