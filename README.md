@@ -90,6 +90,16 @@ Pretty straight forward:
         });
 ```
 
+| Screenshot 1  | Screenshot 2 |
+| ------------- | ------------- |
+| ![Smartphones](http://i.imgur.com/qaKUJiW.png?1)  | ![Smartphones](http://i.imgur.com/nPHH3di.png?1)  |
+
+
+| Favorites 1  | Favorites 2 |
+| ------------- | ------------- |
+| ![Smartphones](http://i.imgur.com/wywP0nB.png?1)  | ![Smartphones](http://i.imgur.com/LYErPhm.png?1)  |
+
+
    Copyright 2016 Josh Skrzypczak
 
    Licensed under the Apache License, Version 2.0 (the "License");
