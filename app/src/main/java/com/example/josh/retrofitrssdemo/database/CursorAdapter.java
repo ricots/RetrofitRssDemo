@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.josh.retrofitrssdemo.R;
 import com.example.josh.retrofitrssdemo.model.Item;
@@ -34,8 +35,8 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
     @Override
     public void onBindViewHolder(final DatabaseViewHolder viewHolder, final Cursor cursor) {
         //final int position = getCursor().getPosition();
-        int id = cursor.getInt(0);
-        String title = cursor.getString(1);
+        final int id = cursor.getInt(0);
+        final String title = cursor.getString(1);
         String description = cursor.getString(2);
         String pubDate = cursor.getString(3);
         String link = cursor.getString(4);
@@ -77,7 +78,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
          */
 
 
-        // Removing Items from Favorites
+        // Removing Single Item from Favorites
         //TODO: Handle proper item removal. NotifyItemChanged? Once Removed from favorites ...
         viewHolder.trashImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,10 +99,21 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                             public void onClick(DialogInterface dialog, int which) {
                                 // remove the element at particular position from the list
                                 dataSource.removeBill(item.getTitle());
+                                Toast.makeText(context, "Deleted: " + item.getTitle(), Toast.LENGTH_SHORT).show();
                                 // notifies RecyclerView Adapter that data in adapter has been removed at a particular position
                                 notifyItemRemoved(position);
                                 // TODO: Fix notifyItemRangeChanged:
                                 notifyItemRangeChanged(position, getItemCount());
+                                /*
+                                By including swapCursor below, this fixes the notifyItemRangeChanged.
+                                However, searchview creates IndexOutOfBoundsException. Adding notifyDataSetChanged
+                                * in CursorRecyclerViewAdapter fixes the searchView problem, but gets rid of the nice removal
+                                 * animation. Otherwise, item removal appears to work fine.
+                                 * See link below for possible solution:
+                                 * http://stackoverflow.com/questions/30220771/recyclerview-inconsistency-detected-invalid-item-position
+                                 * http://stackoverflow.com/questions/26827222/how-to-change-contents-of-recyclerview-while-scrolling
+                                 */
+
                                 swapCursor(dataSource.getAllBills());
                             }
                         });
@@ -109,7 +121,6 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                 alert.show();
             }
         });
-
 
         // Share bill:
         viewHolder.shareImageButton.setOnClickListener(new View.OnClickListener() {
@@ -137,4 +148,13 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         View view = inflater.inflate(R.layout.database_item_row, parent, false);
         return new DatabaseViewHolder(view);
     }
+
+    // TODO: properly handle option to delete all saved items
+//    public void clearApplications(){
+//        getCursor().getCount();
+//        dataSource.RemoveAll();
+//        notifyItemRangeChanged(0, getItemCount());
+//        notifyDataSetChanged();
+//        swapCursor(dataSource.getAllBills());
+//    }
 }

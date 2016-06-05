@@ -36,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
     Channel channelList;
     RssAdapter adapter;
 
+
+
+    //TODO onResume - update the list (save/heart icon) after removing items from favorites and returning to MainActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,8 +165,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
 }

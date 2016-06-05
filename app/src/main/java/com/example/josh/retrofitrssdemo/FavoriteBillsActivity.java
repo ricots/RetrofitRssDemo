@@ -29,7 +29,6 @@ import java.text.Normalizer;
  */
 public class FavoriteBillsActivity extends AppCompatActivity {
 
-    // TODO CursorLoader?
     RecyclerView recyclerView;
     FavoritesDataSource dataSource;
     Cursor cursor;
@@ -56,7 +55,6 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         cursor = dataSource.getAllBills();
         mAdapter = new CursorAdapter(this, cursor);
         recyclerView.setAdapter(mAdapter);
-
 
     }
 
@@ -104,8 +102,6 @@ public class FavoriteBillsActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
         return true;
     }
 
@@ -141,9 +137,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             AlertDialog alert = builder.create();
             alert.show();
         }
-        if (id == R.id.action_count){
-            Toast.makeText(FavoriteBillsActivity.this, cursor.getCount() + " Items Saved", Toast.LENGTH_SHORT).show();
-        }
+        // TODO: properly handle option to remove all saved items
 
         return super.onOptionsItemSelected(item);
     }

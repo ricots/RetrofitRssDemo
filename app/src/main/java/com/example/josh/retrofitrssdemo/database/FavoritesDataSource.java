@@ -15,19 +15,19 @@ public class FavoritesDataSource {
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
 
-    public FavoritesDataSource(Context context){
+    public FavoritesDataSource(Context context) {
         dbHelper = DatabaseHelper.getInstance(context);
     }
 
-    public void open(boolean readonly){
+    public void open(boolean readonly) {
         database = readonly ? dbHelper.getReadableDatabase() : dbHelper.getWritableDatabase();
     }
 
-    public void close(){
+    public void close() {
         database.close();
     }
 
-    private Item cursorToBill(Cursor cursor){
+    private Item cursorToBill(Cursor cursor) {
         String title = cursor.getString(0);
         String description = cursor.getString(1);
         String pubDate = cursor.getString(2);
@@ -36,7 +36,7 @@ public class FavoritesDataSource {
         return new Item(title, description, pubDate, guid, link);
     }
 
-    public long insertBill(Item billItem){
+    public long insertBill(Item billItem) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_BILL_TITLE, billItem.getTitle());
         values.put(DatabaseHelper.COLUMN_BILL_DESCRIPTION, billItem.getDescription());
@@ -47,41 +47,56 @@ public class FavoritesDataSource {
         return database.insert(DatabaseHelper.TABLE_FAVORITES, null, values);
     }
 
-    public boolean ifBillExists(String title){
-//        String query = "select rowid _id,* from favorites " + DatabaseHelper.TABLE_FAVORITES + " where " + DatabaseHelper.COLUMN_ID + " = " + id;
-//        Cursor c = database.rawQuery(query, null);
+
+    public boolean ifBillExists(String title) {
         Cursor cursor = database.rawQuery("select 1 from " + DatabaseHelper.TABLE_FAVORITES + " where " + DatabaseHelper.COLUMN_BILL_TITLE + "=?"
          , new String[]{title});
-
         boolean b = cursor.moveToFirst();
         cursor.close();
         return b;
+
+//        Cursor cursor = database.rawQuery("select 1 from " + DatabaseHelper.TABLE_FAVORITES + " where " + DatabaseHelper.COLUMN_BILL_TITLE + "=?"
+//                , new String[]{title});
+//        cursor.moveToLast();
+//        if (cursor.getCount() <= 0) {
+//            cursor.close();
+//            return false;
+//        }
+//        cursor.close();
+//        return true;
+
     }
 
-    public int removeBill(String title){
-
+    public int removeBill(String title) {
         return database.delete(DatabaseHelper.TABLE_FAVORITES, DatabaseHelper.COLUMN_BILL_TITLE + "=?", new String[]{title}); // + title, null);
     }
 
-    public Cursor getAllBills(){
+    public void removeBillTest(String title){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(DatabaseHelper.TABLE_FAVORITES, DatabaseHelper.COLUMN_BILL_TITLE + "=?", new String[]{title});
+        db.close();
+    }
+
+    public Cursor getAllBills() {
         return database.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_FAVORITES, null);
     }
 
-    public void RemoveAll(){
+    // TODO: properly handle removal of all saved items
+    public void RemoveAll() {
         database.delete(DatabaseHelper.TABLE_FAVORITES, null, null);
     }
 
-    public int getBillCount(){
+
+    public int getBillCount() {
         String countQuery = "SELECT * FROM " + DatabaseHelper.TABLE_FAVORITES;
         SQLiteDatabase db = this.dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
-        int cnt = cursor.getCount();
         cursor.close();
-        return cnt;
+        return cursor.getCount();
+
     }
 
-
-    public Cursor searchTasks(String search){
+    public Cursor searchTasks(String search) {
         // Credit to http://instinctcoder.com/android-studio-sqlite-search-searchview-actionbar/
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT rowid as " +
@@ -91,12 +106,12 @@ public class FavoritesDataSource {
                 DatabaseHelper.COLUMN_BILL_PUBDATE + "," +
                 DatabaseHelper.COLUMN_BILL_LINK + "," +
                 DatabaseHelper.COLUMN_BILL_GUID +
-                " FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" +search + "%' OR " + DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" +search + "%'";
+                " FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" + search + "%' OR " + DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" + search + "%'";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor == null){
+        if (cursor == null) {
             return null;
-        } else  if (!cursor.moveToFirst()){
+        } else if (!cursor.moveToFirst()) {
             cursor.close();
             return null;
         }

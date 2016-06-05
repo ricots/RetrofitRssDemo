@@ -63,7 +63,7 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         dataSource = new FavoritesDataSource(context);
         dataSource.open(false);
 
-        // Save bill to database.
+        // Save item to database.
         // TODO: change onclick to the Card/Rel Layout itself? Faster to save and unsave items.
         holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +81,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
                 }
             }
         });
-        // Calling again probably not necessary nor doing anything?
-        dataSource = new FavoritesDataSource(context);
-        dataSource.open(false);
-
         if (dataSource.ifBillExists(billItem.getTitle())) {
             holder.favoriteButton.setImageResource(R.drawable.ic_favorite_full);
         } else {
@@ -202,4 +198,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         itemList.clear();
         notifyDataSetChanged();
     }
+
+
 }

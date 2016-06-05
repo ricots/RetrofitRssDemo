@@ -116,14 +116,18 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             mRowIdColumn = newCursor.getColumnIndexOrThrow("_id");
             mDataValid = true;
             // notify the observers about the new cursor
-            //notifyDataSetChanged();
-            notifyItemRangeChanged(0, getItemCount());
+            //TODO: Fix IndexOutOfBoundsException: Inconsistency detect.
+            notifyDataSetChanged();
+            //notifyItemRangeChanged(0, getItemCount());
         } else {
             mRowIdColumn = -1;
             mDataValid = false;
             // notify the observers about the lack of a data set
-            //notifyDataSetChanged();
-            notifyItemRangeChanged(0, getItemCount());
+            //TODO: Fix IndexOutOfBoundsException: Inconsistency detect.
+                //not calling notifyDataSetChanged creates this error when using the searchView
+                // calling notifyDataSetChanged removes the removal animation effect
+            notifyDataSetChanged();
+            //notifyItemRangeChanged(0, getItemCount());
         }
         return oldCursor;
     }
@@ -140,8 +144,8 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
         public void onInvalidated() {
             super.onInvalidated();
             mDataValid = false;
-            //notifyDataSetChanged();
-            notifyItemRangeChanged(0, getItemCount());
+            notifyDataSetChanged();
+            //notifyItemRangeChanged(0, getItemCount());
         }
     }
 }
