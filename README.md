@@ -97,7 +97,7 @@ Pretty straight forward:
 
 | Favorites 1  | Favorites 2 |
 | ------------- | ------------- |
-| ![Smartphones](http://i.imgur.com/wywP0nB.png?1)  | ![Smartphones](http://i.imgur.com/LYErPhm.png?1)  |
+| ![Smartphones](http://i.imgur.com/B99CNvp.png?1)  | ![Smartphones](http://i.imgur.com/J3i0s8Y.png?1)  |
 
 
    Copyright 2016 Josh Skrzypczak
