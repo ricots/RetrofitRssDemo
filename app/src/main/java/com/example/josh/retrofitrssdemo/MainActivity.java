@@ -2,6 +2,7 @@ package com.example.josh.retrofitrssdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.example.josh.retrofitrssdemo.adapter.RssAdapter;
-import com.example.josh.retrofitrssdemo.model.Channel;
-import com.example.josh.retrofitrssdemo.model.Item;
 import com.example.josh.retrofitrssdemo.model.Rss;
 import com.example.josh.retrofitrssdemo.network.RssInterface;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,20 +26,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    public static final String KEY_DATA = "DATA";
+    public static final String KEY_DATA = "DATAA";
     public static final String TAG = MainActivity.class.getSimpleName();
     RecyclerView recyclerView;
     RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout refreshLayout;
-    List<Item> items;
-    Channel channelList;
+    ProgressBar progressBar;
     RssAdapter adapter;
+    Rss rssList;
 
-
-
-    //TODO onResume - update the list (save/heart icon) after removing items from favorites and returning to MainActivity
+    // TODO: Fix "IllegalStateException: attempt to re-open an already closed object..." when returning from FavoritesActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,54 +45,69 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         recyclerView = (RecyclerView)findViewById(R.id.recycler);
-        recyclerView.setAdapter(new RssAdapter(MainActivity.this, items));
+        //recyclerView.setAdapter(new RssAdapter(MainActivity.this, items));
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         //recyclerView.addItemDecoration(new DividerItemDecoration(this));
-
-//        final ImageButton fab = (ImageButton) findViewById(R.id.fab);
-//        if (fab != null) {
-//            fab.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    fab.setSelected(!fab.isSelected());
-//                    fab.setImageResource(fab.isSelected() ? R.drawable.animated_plus : R.drawable.animated_minus);
-//                    Drawable drawable = fab.getDrawable();
-//                    if (drawable instanceof Animatable) {
-//                        ((Animatable) drawable).start();
-//                    }
-//                }
-//            });
-//        }
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.legislature.mi.gov/")
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .build();
-        RssInterface rssInterface = retrofit.create(RssInterface.class);
-        Call<Rss> rssCall = rssInterface.getBillItems();
-        rssCall.enqueue(new Callback<Rss>() {
-            @Override
-            public void onResponse(Call<Rss> call, Response<Rss> response) {
-                Rss rss = response.body();
-                recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().getItems()));
-
+        refreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh);
+        if (refreshLayout != null) {
+            refreshLayout.setOnRefreshListener(MainActivity.this);
+        }
+        refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList(KEY_DATA) != null) {
+            rssList.getChannel().mItems = savedInstanceState.getParcelableArrayList(KEY_DATA);
+            progressBar.setVisibility(View.GONE);
+            adapter = new RssAdapter(MainActivity.this, rssList.getChannel().getItems());
+            if (recyclerView.getAdapter() != null){
+                recyclerView.swapAdapter(adapter, false);
+            } else {
+                recyclerView.setAdapter(adapter);
             }
-            @Override
-            public void onFailure(Call<Rss> call, Throwable t) {
-                t.printStackTrace();
-                Log.e("Error:: ", t.getMessage());
-            }
-        });
+        } else {
+            getData();
+        }
+
+        /*
+        START:
+        Default Retrofit Call
+         */
+
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://www.legislature.mi.gov/")
+//                .addConverterFactory(SimpleXmlConverterFactory.create())
+//                .build();
+//        RssInterface rssInterface = retrofit.create(RssInterface.class);
+//        Call<Rss> rssCall = rssInterface.getBillItems();
+//        rssCall.enqueue(new Callback<Rss>() {
+//            @Override
+//            public void onResponse(Call<Rss> call, Response<Rss> response) {
+//                Rss rss = response.body();
+//                recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().getItems()));
+//
+//            }
+//            @Override
+//            public void onFailure(Call<Rss> call, Throwable t) {
+//                t.printStackTrace();
+//                Log.e("Error:: ", t.getMessage());
+//            }
+//        });
+        /*
+        END:
+        Default Retrofit Call
+         */
 
     }
 
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        if (channelList != null){
-//            outState.getParcelableArrayList(KEY_DATA, (ArrayList<? extends Parcelable>)channelList.mItems)
-//        }
-//    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (rssList != null){
+            outState.putParcelableArrayList(KEY_DATA, (ArrayList<? extends Parcelable>) rssList.getChannel().mItems);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,4 +179,52 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onRefresh() {
+        getData();
+    }
+
+    /*
+    START:
+    Retrofit Call V2
+     */
+    public void getData(){
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://www.legislature.mi.gov/")
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .build();
+        RssInterface rssInterface = retrofit.create(RssInterface.class);
+        Call<Rss> rssCall = rssInterface.getBillItems();
+
+        rssCall.enqueue(new Callback<Rss>() {
+            @Override
+            public void onResponse(Call<Rss> call, Response<Rss> response) {
+                Rss rss = response.body();
+                recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().getItems()));
+                adapter = new RssAdapter(MainActivity.this, rss.getChannel().getItems());
+                if (recyclerView.getAdapter() != null){
+                    recyclerView.swapAdapter(adapter, false);
+                } else {
+                    recyclerView.setAdapter(adapter);
+                }
+                refreshLayout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<Rss> call, Throwable t) {
+                t.printStackTrace();
+                Log.e("Error:: ", t.getMessage());
+            }
+        });
+    }
+    /*
+    END:
+    Retrofit Call V2
+     */
 }

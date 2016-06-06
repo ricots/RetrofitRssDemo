@@ -63,8 +63,7 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         dataSource = new FavoritesDataSource(context);
         dataSource.open(false);
 
-        // Save item to database.
-        // TODO: change onclick to the Card/Rel Layout itself? Faster to save and unsave items.
+        // Save item to database & check if item already saved
         holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +186,6 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         notifyDataSetChanged();
     }
 
-    //TODO: Delete if fail
     public void addAll(@NonNull Collection collection) {
         int curSize = getItemCount();
         itemList.addAll(collection);

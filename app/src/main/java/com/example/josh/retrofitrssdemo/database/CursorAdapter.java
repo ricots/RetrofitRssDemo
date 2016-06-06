@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,12 +20,11 @@ import com.example.josh.retrofitrssdemo.model.Item;
  */
 public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder> {
 
-    // TODO CursorLoader?
     public static final String TAG = "CursAdapterItemCount";
     LayoutInflater inflater;
     Context context;
     FavoritesDataSource dataSource;
-    //private int expandedPosition = -1;
+    private int expandedPosition = -1;
 
     public CursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
@@ -34,7 +34,9 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
 
     @Override
     public void onBindViewHolder(final DatabaseViewHolder viewHolder, final Cursor cursor) {
-        //final int position = getCursor().getPosition();
+        Log.d(TAG, "Count: " + getItemCount());
+
+        final int position = getCursor().getPosition();
         final int id = cursor.getInt(0);
         final String title = cursor.getString(1);
         String description = cursor.getString(2);
@@ -43,8 +45,6 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         String guid = cursor.getString(5);
 
         final Item item = new Item(title, description, pubDate, link, guid);
-
-        Log.d(TAG, "Count: " + getItemCount());
 
         viewHolder.title.setText(item.getTitle());
         viewHolder.description.setText(item.getDescription());
@@ -56,30 +56,29 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         START:
         Expandable Recyclerview
          */
-//        if (position == expandedPosition) {
-//            viewHolder.relExpandAreaFav.setVisibility(View.VISIBLE);
-//        } else {
-//            viewHolder.relExpandAreaFav.setVisibility(View.GONE);
-//        }
-//        viewHolder.relTopAreaFav.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(final View v) {
-//                if (expandedPosition >= 0) {
-//                    int prev = expandedPosition;
-//                    notifyItemChanged(prev);
-//                }
-//                expandedPosition = viewHolder.getAdapterPosition();
-//                notifyItemChanged(expandedPosition);
-//            }
-//        });
+        if (position == expandedPosition) {
+            viewHolder.relExpandAreaFav.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.relExpandAreaFav.setVisibility(View.GONE);
+        }
+        viewHolder.relTopAreaFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                if (expandedPosition >= 0) {
+                    int prev = expandedPosition;
+                    notifyItemChanged(prev);
+                }
+                expandedPosition = viewHolder.getAdapterPosition();
+                notifyItemChanged(expandedPosition);
+            }
+        });
         /*
         END:
         Expandable Recyclerview
          */
 
 
-        // Removing Single Item from Favorites
-        //TODO: Handle proper item removal. NotifyItemChanged? Once Removed from favorites ...
+        // Remove single item from Favorites
         viewHolder.trashImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -103,7 +102,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                                 // notifies RecyclerView Adapter that data in adapter has been removed at a particular position
                                 notifyItemRemoved(position);
                                 // TODO: Fix notifyItemRangeChanged:
-                                notifyItemRangeChanged(position, getItemCount());
+                                notifyItemRangeChanged(position, getItemCount());// Which getItemCount is this using?
                                 /*
                                 By including swapCursor below, this fixes the notifyItemRangeChanged.
                                 However, searchview creates IndexOutOfBoundsException. Adding notifyDataSetChanged
@@ -122,7 +121,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
             }
         });
 
-        // Share bill:
+        // Share item:
         viewHolder.shareImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,15 +132,25 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                 context.startActivity(shareIntent);
             }
         });
+        // open item in browser
+        viewHolder.browserImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(item.getLink());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                context.startActivity(intent);
+            }
+        });
+
     }
 
-    @Override
-    public int getItemCount() {
-        if (getCursor() == null || getCursor().isClosed()){
-            return 0;
-        }
-        return getCursor().getCount();
-    }
+//    @Override
+//    public int getItemCount() {
+//        if (getCursor() == null || getCursor().isClosed()){
+//            return 0;
+//        }
+//        return getCursor().getCount();
+//    }
 
     @Override
     public DatabaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

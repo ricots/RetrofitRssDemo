@@ -13,4 +13,5 @@
     <string name="action_transitions">Animations Test</string>
     <string name="dialog_save">Add to favorites</string>
     <string name="dialog_unsave">Remove from favorites</string>
+    <string name="dialog_favorites_delete">Delete from favorites</string>
 </resources>

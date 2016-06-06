@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.josh.retrofitrssdemo.model.Item;
 
@@ -11,7 +12,7 @@ import com.example.josh.retrofitrssdemo.model.Item;
  * Created by Josh on 4/22/2016.
  */
 public class FavoritesDataSource {
-
+    private static final String TAG = "SearchViewDataSource";
     private SQLiteDatabase database;
     private DatabaseHelper dbHelper;
 
@@ -49,12 +50,21 @@ public class FavoritesDataSource {
 
 
     public boolean ifBillExists(String title) {
+        /*
+        Version 1 Test
+         */
         Cursor cursor = database.rawQuery("select 1 from " + DatabaseHelper.TABLE_FAVORITES + " where " + DatabaseHelper.COLUMN_BILL_TITLE + "=?"
          , new String[]{title});
         boolean b = cursor.moveToFirst();
         cursor.close();
         return b;
 
+
+
+
+        /*
+        Version 3 Test
+         */
 //        Cursor cursor = database.rawQuery("select 1 from " + DatabaseHelper.TABLE_FAVORITES + " where " + DatabaseHelper.COLUMN_BILL_TITLE + "=?"
 //                , new String[]{title});
 //        cursor.moveToLast();
@@ -97,6 +107,7 @@ public class FavoritesDataSource {
     }
 
     public Cursor searchTasks(String search) {
+        Log.w(TAG, search);
         // Credit to http://instinctcoder.com/android-studio-sqlite-search-searchview-actionbar/
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String selectQuery = "SELECT rowid as " +
@@ -107,8 +118,11 @@ public class FavoritesDataSource {
                 DatabaseHelper.COLUMN_BILL_LINK + "," +
                 DatabaseHelper.COLUMN_BILL_GUID +
                 " FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" + search + "%' OR " + DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" + search + "%'";
+        //" FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" +search + "%' "; //+ DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" + search + "%'";
 
+        Log.wtf(TAG, selectQuery);
         Cursor cursor = db.rawQuery(selectQuery, null);
+
         if (cursor == null) {
             return null;
         } else if (!cursor.moveToFirst()) {

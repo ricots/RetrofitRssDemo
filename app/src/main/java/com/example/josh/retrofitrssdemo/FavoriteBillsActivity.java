@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -79,9 +78,10 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setQueryHint("Enter bill # or keyword");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            // TODO: Try different implementation of searchView to fix IndexOutofBoundsException?
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(TAGG, "onQueryTextSubmit");
+                //Log.d(TAGG, "onQueryTextSubmit");
                 cursor  = dataSource.searchTasks(query);
                 if (cursor == null){
                     Toast.makeText(FavoriteBillsActivity.this, "No Records Found", Toast.LENGTH_SHORT).show();
@@ -94,7 +94,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d(TAGG, "onQueryTextSubmit");
+                //Log.d(TAGG, "onQueryTextSubmit");
                 cursor = dataSource.searchTasks(newText);
                 if (cursor != null){
                     mAdapter.swapCursor(cursor);
@@ -137,7 +137,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             AlertDialog alert = builder.create();
             alert.show();
         }
-        // TODO: properly handle option to remove all saved items
+        // TODO: Add "delete all" option?
 
         return super.onOptionsItemSelected(item);
     }
