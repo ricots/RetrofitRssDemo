@@ -59,7 +59,8 @@ public class FavoritesDataSource {
         cursor.close();
         return b;
 
-
+        // return DatabaseUtils.queryNumEntries(db, TABLENAME(), "_ID=?", new String[] {"1"}) > 0;
+        //return DatabaseUtils.longForQuery(db, "select count(*) from " + TABLENAME() + " where _ID=? limit 1", new String[] {"1"}) > 0;
 
 
         /*

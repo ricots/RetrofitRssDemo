@@ -124,7 +124,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             mRowIdColumn = -1;
             mDataValid = false;
             // notify the observers about the lack of a data set
-            //notifyDataSetChanged();
+            notifyDataSetChanged();
             notifyItemRangeChanged(0, getItemCount());
         }
         return oldCursor;
