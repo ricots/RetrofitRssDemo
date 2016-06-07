@@ -19,7 +19,6 @@ public class DatabaseViewHolder extends RecyclerView.ViewHolder {
     public TextView description;
     public TextView pubDate;
     public ImageButton trashImageButton, shareImageButton, browserImageButton;
-    //public ImageButton dialogImageButton;
     public RelativeLayout relExpandAreaFav, relTopAreaFav;
 
     public DatabaseViewHolder(View itemView){
@@ -30,8 +29,7 @@ public class DatabaseViewHolder extends RecyclerView.ViewHolder {
         pubDate = (TextView)itemView.findViewById(R.id.bill_fav_pubdate);
         trashImageButton = (ImageButton)itemView.findViewById(R.id.fav_trash_button);
         shareImageButton = (ImageButton)itemView.findViewById(R.id.fav_share_button);
-        //dialogImageButton = (ImageButton)itemView.findViewById(R.id.fav_alert_dialog_button);
-        relExpandAreaFav = (RelativeLayout) itemView.findViewById(R.id.rlExpandAreaFav);
+        relExpandAreaFav = (RelativeLayout) itemView.findViewById(R.id.rel_bottom_area_fav);
         relTopAreaFav = (RelativeLayout)itemView.findViewById(R.id.rel_top_area_fav);
         browserImageButton = (ImageButton)itemView.findViewById(R.id.fav_open_in_browser_button);
 

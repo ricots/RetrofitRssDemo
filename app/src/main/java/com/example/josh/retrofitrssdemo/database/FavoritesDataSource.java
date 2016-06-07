@@ -118,8 +118,8 @@ public class FavoritesDataSource {
                 DatabaseHelper.COLUMN_BILL_PUBDATE + "," +
                 DatabaseHelper.COLUMN_BILL_LINK + "," +
                 DatabaseHelper.COLUMN_BILL_GUID +
-                " FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" + search + "%' OR " + DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" + search + "%'";
-        //" FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" +search + "%' "; //+ DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" + search + "%'";
+                " FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" + search.trim() + "%' OR " + DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" + search.trim() + "%'";
+        //" FROM " + DatabaseHelper.TABLE_FAVORITES + " WHERE " + DatabaseHelper.COLUMN_BILL_TITLE + " LIKE '%" + search + "%' OR " + DatabaseHelper.COLUMN_BILL_DESCRIPTION + " LIKE '%" + search + "%'";
 
         Log.wtf(TAG, selectQuery);
         Cursor cursor = db.rawQuery(selectQuery, null);
