@@ -15,4 +15,11 @@
         android:icon="@drawable/ic_help_outline_white_24dp"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:title="CoachMark"
+        android:id="@+id/action_coach"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_count_cart"
+        app:showAsAction="ifRoom"/>
+
 </menu>
