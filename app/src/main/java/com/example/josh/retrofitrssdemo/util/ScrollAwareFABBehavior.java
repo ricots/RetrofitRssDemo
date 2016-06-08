@@ -1,4 +1,4 @@
-package com.example.josh.retrofitrssdemo;
+package com.example.josh.retrofitrssdemo.util;
 
 import android.content.Context;
 import android.support.design.widget.CoordinatorLayout;

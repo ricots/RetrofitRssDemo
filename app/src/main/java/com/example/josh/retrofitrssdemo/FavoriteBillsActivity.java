@@ -1,7 +1,10 @@
 package com.example.josh.retrofitrssdemo;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
@@ -16,6 +19,8 @@ import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.example.josh.retrofitrssdemo.database.CursorAdapter;
@@ -137,7 +142,32 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             AlertDialog alert = builder.create();
             alert.show();
         }
-        // TODO: Add "delete all" option?
+        /*
+        START:
+        Coach Mark testing "help" overlay
+         */
+        if (id == R.id.action_coach){
+            final Dialog dialog = new Dialog(this, R.style.WalkthroughTheme);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.setContentView(R.layout.coach_mark);
+            dialog.setCanceledOnTouchOutside(true);
+            View masterView = dialog.findViewById(R.id.coach_mark_master_view);
+            masterView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+        /*
+        END:
+        Coach Mark testing "help" overlay
+        Or, try following implementation instead:
+        http://stackoverflow.com/questions/10216937/how-do-i-create-a-help-overlay-like-you-see-in-a-few-android-apps-and-ics
+         */
+        // TODO: Add "delete all" option to menu?
 
         return super.onOptionsItemSelected(item);
     }

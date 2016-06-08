@@ -1,10 +1,12 @@
-package com.example.josh.retrofitrssdemo;
+package com.example.josh.retrofitrssdemo.util;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.example.josh.retrofitrssdemo.R;
 
 /**
  * Created by Josh on 5/18/2016.
