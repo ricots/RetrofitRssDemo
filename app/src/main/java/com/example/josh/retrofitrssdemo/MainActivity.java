@@ -15,11 +15,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.example.josh.retrofitrssdemo.adapter.RssAdapter;
+import com.example.josh.retrofitrssdemo.database.FavoritesDataSource;
 import com.example.josh.retrofitrssdemo.model.Rss;
 import com.example.josh.retrofitrssdemo.network.RssInterface;
 
 import java.util.ArrayList;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     ProgressBar progressBar;
     RssAdapter adapter;
     Rss rssList;
+    FavoritesDataSource dataSource;
 
     // TODO: Fix "IllegalStateException: attempt to re-open an already closed object..." when returning from FavoritesActivity
     @Override
@@ -193,9 +197,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.INVISIBLE);
 
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.legislature.mi.gov/")
                 .addConverterFactory(SimpleXmlConverterFactory.create())
+                .client(httpClient.build())
                 .build();
         RssInterface rssInterface = retrofit.create(RssInterface.class);
         Call<Rss> rssCall = rssInterface.getBillItems();
@@ -227,4 +238,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     END:
     Retrofit Call V2
      */
+
 }
+

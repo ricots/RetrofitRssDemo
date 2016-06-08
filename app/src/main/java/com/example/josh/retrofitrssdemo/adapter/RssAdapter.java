@@ -17,8 +17,12 @@ import com.example.josh.retrofitrssdemo.R;
 import com.example.josh.retrofitrssdemo.database.FavoritesDataSource;
 import com.example.josh.retrofitrssdemo.model.Item;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Josh on 4/21/2016.
@@ -58,7 +62,22 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         final Item billItem = itemList.get(position);
         holder.billTitle.setText(billItem.getTitle());
         holder.billDescription.setText(billItem.getDescription());
-        holder.billPubDate.setText(billItem.getPubDate());
+        //holder.billPubDate.setText(billItem.getPubDate());
+
+
+        // Converting Date and Time
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z");
+        format.setTimeZone(TimeZone.getTimeZone("EST"));
+        try {
+            Date parsed = format.parse(billItem.getPubDate());
+            TimeZone tz = TimeZone.getTimeZone("America/Detroit");
+            SimpleDateFormat destFormat = new SimpleDateFormat("EEE, MMM dd, yyyy hh:mm:ss a");
+            destFormat.setTimeZone(tz);
+            String result = destFormat.format(parsed);
+            holder.billPubDate.setText(result);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         dataSource = new FavoritesDataSource(context);
         dataSource.open(false);
