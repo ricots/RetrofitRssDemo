@@ -201,6 +201,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(logging);
+        /*
+        Add line below for Stetho. Also uncomment MyApplication.java & in Gradle. Make change in Manifest.
+         */
+        //httpClient.addNetworkInterceptor(new StethoInterceptor());
 
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -222,8 +226,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 } else {
                     recyclerView.setAdapter(adapter);
                 }
-                refreshLayout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
+                refreshLayout.setRefreshing(false);
                 recyclerView.setVisibility(View.VISIBLE);
             }
 
