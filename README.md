@@ -95,7 +95,7 @@ Pretty straight forward:
 | ![Smartphones](http://i.imgur.com/qaKUJiW.png?1)  | ![Smartphones](http://i.imgur.com/nPHH3di.png?1)  |
 
 
-| Favorites 1  | Favorites 2 |
+| Favorites Card Expanded  | Favorites Card Collapsed |
 | ------------- | ------------- |
 | ![Smartphones](http://i.imgur.com/SWgtxAJ.png?1)  | ![Smartphones](http://i.imgur.com/4vnXvSw.png?1)  |
 
