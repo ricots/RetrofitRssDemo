@@ -97,7 +97,7 @@ Pretty straight forward:
 
 | Favorites Card Expanded  | Favorites Card Collapsed |
 | ------------- | ------------- |
-| ![Smartphones](http://i.imgur.com/SWgtxAJ.png?1)  | ![Smartphones](http://i.imgur.com/4vnXvSw.png?1)  |
+| ![Smartphones](http://i.imgur.com/SWgtxAJ.png?1)  | ![Smartphones](http://i.imgur.com/4vnXvSw.png?2)  |
 
 
    Copyright 2016 Josh Skrzypczak
