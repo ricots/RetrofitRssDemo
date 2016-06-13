@@ -32,6 +32,5 @@ public class DatabaseViewHolder extends RecyclerView.ViewHolder {
         relExpandAreaFav = (RelativeLayout) itemView.findViewById(R.id.rel_bottom_area_fav);
         relTopAreaFav = (RelativeLayout)itemView.findViewById(R.id.rel_top_area_fav);
         browserImageButton = (ImageButton)itemView.findViewById(R.id.fav_open_in_browser_button);
-
     }
 }

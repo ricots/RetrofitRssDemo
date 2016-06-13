@@ -94,8 +94,9 @@ public class FavoritesDataSource {
     }
 
     // TODO: properly handle removal of all saved items
-    public void RemoveAll() {
-        database.delete(DatabaseHelper.TABLE_FAVORITES, null, null);
+    public void removeAll() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.delete(DatabaseHelper.TABLE_FAVORITES, null,null);
     }
 
 

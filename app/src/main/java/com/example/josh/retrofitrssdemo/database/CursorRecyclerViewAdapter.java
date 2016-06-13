@@ -143,7 +143,7 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
             super.onInvalidated();
             mDataValid = false;
             notifyDataSetChanged();
-            //notifyItemRangeChanged(0, getItemCount());
+            notifyItemRangeChanged(0, getItemCount());
         }
     }
 }

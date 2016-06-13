@@ -48,17 +48,20 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        recyclerView = (RecyclerView)findViewById(R.id.recycler);
         //recyclerView.setAdapter(new RssAdapter(MainActivity.this, items));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(this));
+        recyclerView = (RecyclerView)findViewById(R.id.recycler);
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
-        //recyclerView.addItemDecoration(new DividerItemDecoration(this));
         refreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh);
+
         if (refreshLayout != null) {
             refreshLayout.setOnRefreshListener(MainActivity.this);
         }
+
         refreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.progress_colors));
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+
         if (savedInstanceState != null && savedInstanceState.getParcelableArrayList(KEY_DATA) != null) {
             rssList.getChannel().mItems = savedInstanceState.getParcelableArrayList(KEY_DATA);
             progressBar.setVisibility(View.GONE);
@@ -71,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         } else {
             getData();
         }
+
+
+
+
 
         /*
         START:
@@ -102,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
          */
 
     }
-
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -242,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     END:
     Retrofit Call V2
      */
+
 
 }
 

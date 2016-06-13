@@ -15,6 +15,11 @@ import android.widget.Toast;
 import com.example.josh.retrofitrssdemo.R;
 import com.example.josh.retrofitrssdemo.model.Item;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * Created by Josh on 4/22/2016.
  */
@@ -46,9 +51,22 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
 
         final Item item = new Item(title, description, pubDate, link, guid);
 
+        // Converting Date and Time
+        SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z");
+        format.setTimeZone(TimeZone.getTimeZone("EST"));
+        try {
+            Date parsed = format.parse(item.getPubDate());
+            TimeZone tz = TimeZone.getTimeZone("America/Detroit");
+            SimpleDateFormat destFormat = new SimpleDateFormat("EEE, MMM dd, yyyy hh:mm:ss a");
+            destFormat.setTimeZone(tz);
+            String result = destFormat.format(parsed);
+            viewHolder.pubDate.setText(result);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         viewHolder.title.setText(item.getTitle());
         viewHolder.description.setText(item.getDescription());
-        viewHolder.pubDate.setText(item.getPubDate());
 
         dataSource = new FavoritesDataSource(context);
         dataSource.open(false);
@@ -78,6 +96,8 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
          */
 
 
+
+
         // Remove single item from Favorites
         viewHolder.trashImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,21 +119,20 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                                 // remove the element at particular position from the list
                                 dataSource.removeBill(item.getTitle());
                                 Toast.makeText(context, "Deleted: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                                // notifies RecyclerView Adapter that data in adapter has been removed at a particular position
                                 notifyItemRemoved(position);
                                 // TODO: Fix notifyItemRangeChanged:
-                                notifyItemRangeChanged(position, getItemCount());// Which getItemCount is this using?
+                                notifyItemRangeChanged(position, getItemCount());
+                                swapCursor(dataSource.getAllBills());
                                 /*
-                                By including swapCursor below, this fixes the notifyItemRangeChanged.
+                                By including swapCursor, this fixes the notifyItemRangeChanged (or appears to)
                                 However, searchview creates IndexOutOfBoundsException. Adding notifyDataSetChanged
-                                * in CursorRecyclerViewAdapter fixes the searchView problem, but gets rid of the nice removal
-                                 * animation. Otherwise, item removal appears to work fine.
-                                 * See link below for possible solution:
-                                 * http://stackoverflow.com/questions/30220771/recyclerview-inconsistency-detected-invalid-item-position
-                                 * http://stackoverflow.com/questions/26827222/how-to-change-contents-of-recyclerview-while-scrolling
+                                in CursorRecyclerViewAdapter fixes the searchView problem, but gets rid of the nice removal
+                                animation. Otherwise, item removal appears to work fine.
+                                See link below for possible solution:
+                                http://stackoverflow.com/questions/30220771/recyclerview-inconsistency-detected-invalid-item-position
+                                http://stackoverflow.com/questions/26827222/how-to-change-contents-of-recyclerview-while-scrolling
                                  */
 
-                                swapCursor(dataSource.getAllBills());
                             }
                         });
                 AlertDialog alert = builder.create();
@@ -132,7 +151,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                 context.startActivity(shareIntent);
             }
         });
-        // open item in browser
+        // Open item in browser
         viewHolder.browserImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +160,6 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                 context.startActivity(intent);
             }
         });
-
     }
 
 //    @Override
@@ -157,13 +175,4 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         View view = inflater.inflate(R.layout.database_item_row, parent, false);
         return new DatabaseViewHolder(view);
     }
-
-    // TODO: properly handle option to delete all saved items
-//    public void clearApplications(){
-//        getCursor().getCount();
-//        dataSource.RemoveAll();
-//        notifyItemRangeChanged(0, getItemCount());
-//        notifyDataSetChanged();
-//        swapCursor(dataSource.getAllBills());
-//    }
 }
