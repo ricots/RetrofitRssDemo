@@ -165,26 +165,6 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         http://stackoverflow.com/questions/10216937/how-do-i-create-a-help-overlay-like-you-see-in-a-few-android-apps-and-ics
          */
         // TODO: Add "Remove All" option
-        if (id == R.id.action_remove_all){
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
-            builder.setMessage("Delete all?")
-                    .setCancelable(true)
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setPositiveButton("DELETE ALL", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dataSource.removeAll();
-                            mAdapter.notifyItemRangeRemoved(cursor.getPosition(), cursor.getCount());
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
 
         return super.onOptionsItemSelected(item);
     }
