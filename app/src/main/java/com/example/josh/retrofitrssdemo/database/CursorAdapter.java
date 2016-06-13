@@ -95,9 +95,6 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         Expandable Recyclerview
          */
 
-
-
-
         // Remove single item from Favorites
         viewHolder.trashImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
