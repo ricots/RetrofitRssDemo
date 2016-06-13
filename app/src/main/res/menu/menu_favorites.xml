@@ -18,8 +18,17 @@
     <item
         android:title="CoachMark"
         android:id="@+id/action_coach"
-        android:orderInCategory="200"
+        android:orderInCategory="300"
         android:icon="@drawable/ic_count_cart"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:title="Delete All"
+        android:id="@+id/action_remove_all"
+        android:orderInCategory="400"
+        android:icon="@drawable/ic_delete_forever_white_24px"
+        app:showAsAction="ifRoom"/>
+
+
 
 </menu>

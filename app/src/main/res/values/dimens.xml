@@ -15,4 +15,5 @@
     <dimen name="md_keylines">16dp</dimen>
     <dimen name="standard_material_padding">16dp</dimen>
     <dimen name="standard_text_size">16sp</dimen>
+    <dimen name="ic_clear_margin">16dp</dimen>
 </resources>
