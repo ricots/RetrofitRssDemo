@@ -40,22 +40,20 @@ public class FavoriteBillsActivity extends AppCompatActivity {
     public final static String TAGG = FavoriteBillsActivity.class.getSimpleName();
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorites);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         dataSource = new FavoritesDataSource(getApplicationContext());
         dataSource.open(true);
-
-        recyclerView = (RecyclerView)findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         cursor = dataSource.getAllBills();
         mAdapter = new CursorAdapter(this, cursor);
         recyclerView.setAdapter(mAdapter);
@@ -65,7 +63,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dataSource.close();
+        //dataSource.close();
     }
 
     @Override
@@ -73,7 +71,6 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         super.onStart();
         cursor = dataSource.getAllBills();
         mAdapter.swapCursor(cursor);
-
     }
 
     @Override
@@ -87,8 +84,8 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Log.d(TAGG, "onQueryTextSubmit");
-                cursor  = dataSource.searchTasks(query);
-                if (cursor == null){
+                cursor = dataSource.searchTasks(query);
+                if (cursor == null) {
                     Toast.makeText(FavoriteBillsActivity.this, "No Records Found", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(FavoriteBillsActivity.this, cursor.getCount() + " records found", Toast.LENGTH_SHORT).show();
@@ -101,7 +98,7 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
                 //Log.d(TAGG, "onQueryTextSubmit");
                 cursor = dataSource.searchTasks(newText);
-                if (cursor != null){
+                if (cursor != null) {
                     mAdapter.swapCursor(cursor);
                 }
                 return false;
@@ -118,12 +115,12 @@ public class FavoriteBillsActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
         }
-        if (id == R.id.action_help){
+        if (id == R.id.action_help) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Search by bill number or description keyword.\n" +
-                                "\n" +
-                                "Examples:\n" +
-                                "SB 907, 907, 0907, SB or HB, HJR MM or MM")
+                    "\n" +
+                    "Examples:\n" +
+                    "SB 907, 907, 0907, SB or HB, HJR MM or MM")
                     .setCancelable(false)
                     .setTitle("Search Help")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -146,8 +143,8 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         START:
         Coach Mark testing "help" overlay
          */
-        if (id == R.id.action_coach){
-            final Dialog dialog = new Dialog(this, R.style.WalkthroughTheme);
+        if (id == R.id.action_coach) {
+            final Dialog dialog = new Dialog(this);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.setContentView(R.layout.coach_mark);
@@ -167,20 +164,40 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         Or, try following implementation instead:
         http://stackoverflow.com/questions/10216937/how-do-i-create-a-help-overlay-like-you-see-in-a-few-android-apps-and-ics
          */
-        // TODO: Add "delete all" option to menu?
+        // TODO: Add "Remove All" option
+        if (id == R.id.action_remove_all){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+            builder.setMessage("Delete all?")
+                    .setCancelable(true)
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("DELETE ALL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dataSource.removeAll();
+                            mAdapter.notifyItemRangeRemoved(cursor.getPosition(), cursor.getCount());
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public static CharSequence highlight(String search, String originalText){
+    public static CharSequence highlight(String search, String originalText) {
         String normalizedText = Normalizer.normalize(originalText,
                 Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
         int start = normalizedText.indexOf(search);
-        if (start < 0){
+        if (start < 0) {
             return originalText;
         } else {
             Spannable highlighted = new SpannableString(originalText);
-            while (start >= 0){
+            while (start >= 0) {
                 int spanStart = Math.min(start, originalText.length());
                 int spanEnd = Math.min(start + search.length(), originalText.length());
                 highlighted.setSpan(new BackgroundColorSpan(R.color.colorAccent), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -189,5 +206,4 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             return highlighted;
         }
     }
-
 }
