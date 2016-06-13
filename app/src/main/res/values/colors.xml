@@ -5,6 +5,8 @@
     <color name="colorAccent">@color/md_cyan_A400</color>
     <color name="button_grey">#757575</color>
     <color name="snackbar_text">#FFFF00</color>
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorBillTitle">@color/md_indigo_700</color>
     <array name="progress_colors">
         <item>#2196F3</item>
         <item>#E91E63</item>
@@ -16,7 +18,6 @@
         <item>#8BC34A</item>
         <item>#FF5722</item>
     </array>
-
 
     <!--reds-->
     <color name="md_red_50">#FFEBEE</color>

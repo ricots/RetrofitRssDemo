@@ -4,8 +4,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true">
+    android:background="?attr/selectableItemBackground">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_item_row"
@@ -18,9 +17,8 @@
             android:id="@+id/top_layout_item_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:background="?android:selectableItemBackground"
-            android:clickable="true">
+            android:animateLayoutChanges="true">
 
             <TextView
                 android:id="@+id/bill_title"
@@ -30,7 +28,7 @@
                 android:layout_marginTop="16dp"
                 android:paddingBottom="4dp"
                 android:text="@string/bill_title"
-                android:textColor="#000"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="24sp"/>
 
             <TextView
@@ -44,7 +42,7 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
                 android:text="@string/publication_date"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="14sp"/>
 
             <View
@@ -67,7 +65,7 @@
                 android:paddingBottom="6dp"
                 android:paddingTop="4dp"
                 android:text="@string/bill_description"
-                android:textColor="#000"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="14sp"/>
 
             <ImageButton

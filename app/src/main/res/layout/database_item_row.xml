@@ -2,7 +2,6 @@
 <FrameLayout
     android:id="@+id/root"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_margin"
-        app:cardBackgroundColor="@android:color/white"
         card_view:cardCornerRadius="2dp">
 
         <RelativeLayout
@@ -31,7 +29,7 @@
                 android:layout_marginTop="16dp"
                 android:paddingBottom="4dp"
                 android:text="@string/bill_title"
-                android:textColor="@color/md_indigo_700"
+                android:textColor="@color/textColorBillTitle"
                 android:textSize="24sp"/>
 
             <TextView
@@ -45,7 +43,7 @@
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
                 android:text="@string/publication_date"
-                android:textColor="@color/md_black_1000"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="14sp"/>
 
             <View
@@ -67,7 +65,7 @@
                 android:paddingBottom="6dp"
                 android:paddingTop="4dp"
                 android:text="@string/bill_description"
-                android:textColor="@color/md_black_1000"
+                android:textColor="@color/textColorPrimary"
                 android:textSize="14sp"/>
 
             <RelativeLayout

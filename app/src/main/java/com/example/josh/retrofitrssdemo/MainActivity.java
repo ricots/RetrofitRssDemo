@@ -1,10 +1,12 @@
 package com.example.josh.retrofitrssdemo;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -76,9 +78,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
 
-
-
-
         /*
         START:
         Default Retrofit Call
@@ -124,69 +123,64 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         //final MenuItem searchItem = menu.findItem(R.id.action_search);
         //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         //searchView.setQueryHint(getString(R.string.search_hint));
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(final String query) {
-//                Log.d(TAG, "QueryTextSubmit: " + query);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("query", query);
-//                Retrofit retrofit = new Retrofit.Builder()
-//                        .baseUrl("http://www.legislature.mi.gov/")
-//                        .addConverterFactory(SimpleXmlConverterFactory.create())
-//                        .build();
-//                RssInterface rssInterface = retrofit.create(RssInterface.class);
-//                Call<Rss> searchCall = rssInterface.searchBills(query);
-//                searchCall.enqueue(new Callback<Rss>() {
-//                    @Override
-//                    public void onResponse(Call<Rss> call, Response<Rss> response) {
-//                        Rss rss = response.body();
-                        // ** Currently working with caveats **
-                        //recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().mItems));
-//                        adapter = new RssAdapter(MainActivity.this, rss.getChannel().getItems());
-//                        if (recyclerView.getAdapter() != null){
-//                            recyclerView.swapAdapter(adapter, false);
-//                        } else {
-//                            recyclerView.setAdapter(adapter);
-//                        }
-                        /*
-                        Issues:
-                        We need to get the Title from getChannel vs. from getItems
-                        Handle closing the SearchView. Closing search should display the getBillItems
+        return true;
+    }
 
-                        Also handle NPE if search query is null
-                         */
-//                    }
-//                    @Override
-//                    public void onFailure(Call<Rss> call, Throwable t) {
-//                        t.printStackTrace();
-//                        Log.e("Error:: ", t.getMessage());
-//                    }
-//                });
-//                searchView.clearFocus();
-//                return true;
-//            }
-
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
-
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        switch (AppCompatDelegate.getDefaultNightMode()) {
+            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
+                menu.findItem(R.id.menu_night_mode_system).setChecked(true);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_AUTO:
+                menu.findItem(R.id.menu_night_mode_auto).setChecked(true);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_YES:
+                menu.findItem(R.id.menu_night_mode_night).setChecked(true);
+                break;
+            case AppCompatDelegate.MODE_NIGHT_NO:
+                menu.findItem(R.id.menu_night_mode_day).setChecked(true);
+                break;
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_favorites) {
-            Intent intent = new Intent(MainActivity.this, FavoriteBillsActivity.class);
-            startActivity(intent);
+        switch (item.getItemId()){
+            case R.id.action_favorites:
+                Intent intent = new Intent(MainActivity.this, FavoriteBillsActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_tabs:
+                Intent intent1 = new Intent(MainActivity.this, TabActivityTest.class);
+                startActivity(intent1);
+                return true;
+
+            case R.id.menu_night_mode_system:
+                setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case R.id.menu_night_mode_day:
+                setNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case R.id.menu_night_mode_night:
+                setNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+            case R.id.menu_night_mode_auto:
+                setNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                break;
         }
-        if (id == R.id.action_tabs){
-            Intent intent = new Intent(MainActivity.this, TabActivityTest.class);
-            startActivity(intent);
-        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setNightMode(@AppCompatDelegate.NightMode int nightMode) {
+        AppCompatDelegate.setDefaultNightMode(nightMode);
+
+        if (Build.VERSION.SDK_INT >= 11) {
+            recreate();
+        }
     }
 
     @Override
@@ -210,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         Add line below for Stetho. Also uncomment MyApplication.java & in Gradle. Make change in Manifest.
          */
         //httpClient.addNetworkInterceptor(new StethoInterceptor());
-
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.legislature.mi.gov/")
