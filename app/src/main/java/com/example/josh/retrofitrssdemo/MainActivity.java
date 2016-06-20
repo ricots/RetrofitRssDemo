@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
@@ -16,8 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.josh.retrofitrssdemo.adapter.FeedItemAnimatorTest;
 import com.example.josh.retrofitrssdemo.adapter.RssAdapter;
-import com.example.josh.retrofitrssdemo.database.FavoritesDataSource;
 import com.example.josh.retrofitrssdemo.model.Rss;
 import com.example.josh.retrofitrssdemo.network.RssInterface;
 
@@ -41,9 +42,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     ProgressBar progressBar;
     RssAdapter adapter;
     Rss rssList;
-    FavoritesDataSource dataSource;
+    CoordinatorLayout clContent;
 
-    // TODO: Fix "IllegalStateException: attempt to re-open an already closed object..." when returning from FavoritesActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(mLayoutManager);
         refreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh);
+        clContent = (CoordinatorLayout)findViewById(R.id.content_main);
+        recyclerView.setItemAnimator(new FeedItemAnimatorTest());
 
         if (refreshLayout != null) {
             refreshLayout.setOnRefreshListener(MainActivity.this);
@@ -76,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         } else {
             getData();
         }
-
 
         /*
         START:
@@ -152,12 +153,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Intent intent = new Intent(MainActivity.this, FavoriteBillsActivity.class);
                 startActivity(intent);
                 return true;
-
             case R.id.action_tabs:
                 Intent intent1 = new Intent(MainActivity.this, TabActivityTest.class);
                 startActivity(intent1);
                 return true;
-
             case R.id.menu_night_mode_system:
                 setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                 break;
@@ -171,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 setNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -204,7 +202,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         Add line below for Stetho. Also uncomment MyApplication.java & in Gradle. Make change in Manifest.
          */
         //httpClient.addNetworkInterceptor(new StethoInterceptor());
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.legislature.mi.gov/")
                 .addConverterFactory(SimpleXmlConverterFactory.create())
@@ -240,7 +237,5 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     END:
     Retrofit Call V2
      */
-
-
 }
 
