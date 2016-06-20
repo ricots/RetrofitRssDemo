@@ -159,6 +159,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         });
     }
 
+
 //    @Override
 //    public int getItemCount() {
 //        if (getCursor() == null || getCursor().isClosed()){
