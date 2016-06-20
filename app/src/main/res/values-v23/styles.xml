@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AlertDialogCustom" parent="AlertDialog.AppCompat">
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:titleTextColor">@color/md_grey_500</item>
+
+    </style>
+</resources>
