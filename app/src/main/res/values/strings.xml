@@ -17,10 +17,17 @@
     <string name="dialog_unsave">Remove from favorites</string>
     <string name="dialog_favorites_delete">Delete from favorites</string>
     <string name="empty_list_message">No Recent Bill Activity</string>
+    <string name="empty_favorites_message">No saved items</string>
 
     <string name="menu_night_mode">Night mode</string>
     <string name="menu_night_mode_system">Follow system</string>
     <string name="menu_night_mode_day">Day (always)</string>
     <string name="menu_night_mode_night">Night (always)</string>
     <string name="menu_night_mode_auto">Auto</string>
+
+    <string name="settings">Settings</string>
+    <string name="expand_pref">Expand all cards</string>
+    <string name="collapse_pref">Collapse all cards</string>
+    <string name="prefTitle">Display</string>
+
 </resources>

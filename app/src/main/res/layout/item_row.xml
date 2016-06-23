@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginRight="54dp"
+                android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:paddingBottom="4dp"
                 android:text="@string/bill_title"
@@ -69,13 +69,13 @@
                 android:textColor="@color/textColorPrimary"
                 android:textSize="14sp"/>
 
-            <ImageButton
-                android:id="@+id/button_like_anim"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentRight="true"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_heart_outline_grey" />
+            <!--<ImageButton-->
+                <!--android:id="@+id/button_like_anim"-->
+                <!--android:layout_width="56dp"-->
+                <!--android:layout_height="56dp"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:src="@drawable/ic_heart_outline_grey" />-->
 
             <ImageButton
                 android:id="@+id/heart_saved"
@@ -95,6 +95,7 @@
                 android:layout_height="48dp"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/bill_description"
+                android:background="@android:color/transparent"
                 android:layout_marginRight="16dp"
                 android:src="@drawable/ic_share"/>
 

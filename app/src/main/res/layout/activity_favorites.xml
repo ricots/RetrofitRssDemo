@@ -23,6 +23,15 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:id="@+id/empty_textview_database"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/textColorPrimary"
+        android:text="@string/empty_favorites_message"/>
+
     <include layout="@layout/content_favorites"/>
 
 </android.support.design.widget.CoordinatorLayout>

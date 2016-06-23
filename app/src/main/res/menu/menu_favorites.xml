@@ -27,7 +27,7 @@
         android:id="@+id/action_remove_all"
         android:orderInCategory="400"
         android:icon="@drawable/ic_delete_forever_white_24px"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
 
 

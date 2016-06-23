@@ -1,6 +1,9 @@
 package com.example.josh.retrofitrssdemo;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.josh.retrofitrssdemo.adapter.FeedItemAnimatorTest;
 import com.example.josh.retrofitrssdemo.adapter.RssAdapter;
@@ -50,14 +54,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //recyclerView.setAdapter(new RssAdapter(MainActivity.this, items));
-        //recyclerView.addItemDecoration(new DividerItemDecoration(this));
+
         recyclerView = (RecyclerView)findViewById(R.id.recycler);
         mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
         refreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh);
         clContent = (CoordinatorLayout)findViewById(R.id.content_main);
+
+        recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new FeedItemAnimatorTest());
+
 
         if (refreshLayout != null) {
             refreshLayout.setOnRefreshListener(MainActivity.this);
@@ -78,36 +83,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         } else {
             getData();
         }
-
-        /*
-        START:
-        Default Retrofit Call
-         */
-
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://www.legislature.mi.gov/")
-//                .addConverterFactory(SimpleXmlConverterFactory.create())
-//                .build();
-//        RssInterface rssInterface = retrofit.create(RssInterface.class);
-//        Call<Rss> rssCall = rssInterface.getBillItems();
-//        rssCall.enqueue(new Callback<Rss>() {
-//            @Override
-//            public void onResponse(Call<Rss> call, Response<Rss> response) {
-//                Rss rss = response.body();
-//                recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().getItems()));
-//
-//            }
-//            @Override
-//            public void onFailure(Call<Rss> call, Throwable t) {
-//                t.printStackTrace();
-//                Log.e("Error:: ", t.getMessage());
-//            }
-//        });
-        /*
-        END:
-        Default Retrofit Call
-         */
-
     }
 
     @Override
@@ -119,11 +94,76 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     @Override
+    public void onRefresh() {
+        getData();
+    }
+
+    /*
+    START:
+    Retrofit Call V2
+     */
+    public void getData(){
+
+        if (!isNetworkAvailable()){
+            Log.d(TAG, "No network connection");
+            String msg = "Network connection is needed to get recent bill activity";
+            Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.INVISIBLE);
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(logging);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://www.legislature.mi.gov/")
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .client(httpClient.build())
+                .build();
+        RssInterface rssInterface = retrofit.create(RssInterface.class);
+        Call<Rss> rssCall = rssInterface.getBillItems();
+
+        rssCall.enqueue(new Callback<Rss>() {
+            @Override
+            public void onResponse(Call<Rss> call, Response<Rss> response) {
+                Rss rss = response.body();
+                recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().getItems()));
+                adapter = new RssAdapter(MainActivity.this, rss.getChannel().getItems());
+                if (recyclerView.getAdapter() != null){
+                    recyclerView.swapAdapter(adapter, false);
+                } else {
+                    recyclerView.setAdapter(adapter);
+                }
+                progressBar.setVisibility(View.GONE);
+                refreshLayout.setRefreshing(false);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<Rss> call, Throwable t) {
+                t.printStackTrace();
+                Log.e("Error:: ", t.getMessage());
+            }
+        });
+    }
+    /*
+    END:
+    Retrofit Call V2
+     */
+
+    protected boolean isNetworkAvailable(){
+        ConnectivityManager connectivityManager = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        //final MenuItem searchItem = menu.findItem(R.id.action_search);
-        //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        //searchView.setQueryHint(getString(R.string.search_hint));
         return true;
     }
 
@@ -180,62 +220,33 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             recreate();
         }
     }
-
-    @Override
-    public void onRefresh() {
-        getData();
-    }
-
-    /*
-    START:
-    Retrofit Call V2
-     */
-    public void getData(){
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.INVISIBLE);
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(logging);
-        /*
-        Add line below for Stetho. Also uncomment MyApplication.java & in Gradle. Make change in Manifest.
-         */
-        //httpClient.addNetworkInterceptor(new StethoInterceptor());
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.legislature.mi.gov/")
-                .addConverterFactory(SimpleXmlConverterFactory.create())
-                .client(httpClient.build())
-                .build();
-        RssInterface rssInterface = retrofit.create(RssInterface.class);
-        Call<Rss> rssCall = rssInterface.getBillItems();
-
-        rssCall.enqueue(new Callback<Rss>() {
-            @Override
-            public void onResponse(Call<Rss> call, Response<Rss> response) {
-                Rss rss = response.body();
-                recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().getItems()));
-                adapter = new RssAdapter(MainActivity.this, rss.getChannel().getItems());
-                if (recyclerView.getAdapter() != null){
-                    recyclerView.swapAdapter(adapter, false);
-                } else {
-                    recyclerView.setAdapter(adapter);
-                }
-                progressBar.setVisibility(View.GONE);
-                refreshLayout.setRefreshing(false);
-                recyclerView.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure(Call<Rss> call, Throwable t) {
-                t.printStackTrace();
-                Log.e("Error:: ", t.getMessage());
-            }
-        });
-    }
-    /*
-    END:
-    Retrofit Call V2
-     */
 }
 
+        /*
+        START:
+        Default Retrofit Call
+         */
+
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("http://www.legislature.mi.gov/")
+//                .addConverterFactory(SimpleXmlConverterFactory.create())
+//                .build();
+//        RssInterface rssInterface = retrofit.create(RssInterface.class);
+//        Call<Rss> rssCall = rssInterface.getBillItems();
+//        rssCall.enqueue(new Callback<Rss>() {
+//            @Override
+//            public void onResponse(Call<Rss> call, Response<Rss> response) {
+//                Rss rss = response.body();
+//                recyclerView.setAdapter(new RssAdapter(MainActivity.this, rss.getChannel().getItems()));
+//
+//            }
+//            @Override
+//            public void onFailure(Call<Rss> call, Throwable t) {
+//                t.printStackTrace();
+//                Log.e("Error:: ", t.getMessage());
+//            }
+//        });
+        /*
+        END:
+        Default Retrofit Call
+         */
