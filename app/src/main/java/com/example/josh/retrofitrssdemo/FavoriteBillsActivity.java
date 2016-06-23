@@ -14,30 +14,26 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.josh.retrofitrssdemo.database.CursorAdapter;
 import com.example.josh.retrofitrssdemo.database.FavoritesDataSource;
 
-import java.text.Normalizer;
-
 /**
  * Created by Josh on 4/22/2016.
  */
 public class FavoriteBillsActivity extends AppCompatActivity {
-
     RecyclerView recyclerView;
     FavoritesDataSource dataSource;
     Cursor cursor;
     CursorAdapter mAdapter;
-    public final static String TAGG = FavoriteBillsActivity.class.getSimpleName();
+    TextView emptyList;
+    public final static String TAG = FavoriteBillsActivity.class.getSimpleName();
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -50,20 +46,26 @@ public class FavoriteBillsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        emptyList = (TextView)findViewById(R.id.empty_textview_database);
         dataSource = new FavoritesDataSource(getApplicationContext());
-        dataSource.open(true);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dataSource.open(true);
         cursor = dataSource.getAllBills();
         mAdapter = new CursorAdapter(this, cursor);
         recyclerView.setAdapter(mAdapter);
 
+        checkIfEmpty();
+
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //dataSource.close();
+    // TODO: handle empty state
+    private void checkIfEmpty() {
+        if (mAdapter.getItemCount()== 0){
+            emptyList.setVisibility(View.VISIBLE);
+        } else {
+            emptyList.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -71,6 +73,13 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         super.onStart();
         cursor = dataSource.getAllBills();
         mAdapter.swapCursor(cursor);
+        //checkIfEmpty();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //dataSource.close();
     }
 
     @Override
@@ -164,26 +173,43 @@ public class FavoriteBillsActivity extends AppCompatActivity {
         Or, try following implementation instead:
         http://stackoverflow.com/questions/10216937/how-do-i-create-a-help-overlay-like-you-see-in-a-few-android-apps-and-ics
          */
-        // TODO: Add "Remove All" option
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    public static CharSequence highlight(String search, String originalText) {
-        String normalizedText = Normalizer.normalize(originalText,
-                Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
-        int start = normalizedText.indexOf(search);
-        if (start < 0) {
-            return originalText;
-        } else {
-            Spannable highlighted = new SpannableString(originalText);
-            while (start >= 0) {
-                int spanStart = Math.min(start, originalText.length());
-                int spanEnd = Math.min(start + search.length(), originalText.length());
-                highlighted.setSpan(new BackgroundColorSpan(R.color.colorAccent), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                start = normalizedText.indexOf(search, spanEnd);
+        // TODO: "Remove/Delete All" option
+        if (id == R.id.action_remove_all) {
+            if (mAdapter.getItemCount() == 0){
+                Toast.makeText(FavoriteBillsActivity.this, "Nothing to delete!", Toast.LENGTH_SHORT).show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Remove all from Favorites?")
+                        .setCancelable(true)
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setPositiveButton("DELETE ALL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dataSource.removeAll();
+                                mAdapter.notifyItemRangeRemoved(0, mAdapter.getItemCount());
+                                //mAdapter.notifyDataSetChanged();
+                                mAdapter.swapCursor(dataSource.getAllBills());
+                                Toast.makeText(FavoriteBillsActivity.this, "All items removed from Favorites", Toast.LENGTH_SHORT).show();
+                                checkIfEmpty();
+                            }
+                        });
+                builder.setCancelable(true);
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
-            return highlighted;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

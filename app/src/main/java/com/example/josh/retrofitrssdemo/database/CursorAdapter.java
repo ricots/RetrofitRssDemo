@@ -24,7 +24,6 @@ import java.util.TimeZone;
  * Created by Josh on 4/22/2016.
  */
 public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder> {
-
     public static final String TAG = "CursAdapterItemCount";
     LayoutInflater inflater;
     Context context;
@@ -57,7 +56,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         try {
             Date parsed = format.parse(item.getPubDate());
             TimeZone tz = TimeZone.getTimeZone("America/Detroit");
-            SimpleDateFormat destFormat = new SimpleDateFormat("EEE, MMM dd, yyyy hh:mm:ss a");
+            SimpleDateFormat destFormat = new SimpleDateFormat("EEE, MMM dd, yyyy hh:mm a");
             destFormat.setTimeZone(tz);
             String result = destFormat.format(parsed);
             viewHolder.pubDate.setText(result);
@@ -71,8 +70,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         dataSource = new FavoritesDataSource(context);
         dataSource.open(false);
         /*
-        START:
-        Expandable Recyclerview
+        START: Expandable Recyclerview
          */
         if (position == expandedPosition) {
             viewHolder.relExpandAreaFav.setVisibility(View.VISIBLE);
@@ -91,8 +89,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
             }
         });
         /*
-        END:
-        Expandable Recyclerview
+        END: Expandable Recyclerview
          */
 
         // Remove single item from Favorites
@@ -120,6 +117,7 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
                                 // TODO: Fix notifyItemRangeChanged:
                                 notifyItemRangeChanged(position, getItemCount());
                                 swapCursor(dataSource.getAllBills());
+
                                 /*
                                 By including swapCursor, this fixes the notifyItemRangeChanged (or appears to)
                                 However, searchview creates IndexOutOfBoundsException. Adding notifyDataSetChanged
@@ -159,7 +157,6 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
         });
     }
 
-
 //    @Override
 //    public int getItemCount() {
 //        if (getCursor() == null || getCursor().isClosed()){
@@ -172,5 +169,6 @@ public class CursorAdapter extends CursorRecyclerViewAdapter<DatabaseViewHolder>
     public DatabaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.database_item_row, parent, false);
         return new DatabaseViewHolder(view);
+
     }
 }

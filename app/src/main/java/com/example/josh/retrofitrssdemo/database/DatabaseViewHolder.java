@@ -15,9 +15,7 @@ import com.example.josh.retrofitrssdemo.R;
 public class DatabaseViewHolder extends RecyclerView.ViewHolder {
 
     public FrameLayout root;
-    public TextView title;
-    public TextView description;
-    public TextView pubDate;
+    public TextView title, description, pubDate;
     public ImageButton trashImageButton, shareImageButton, browserImageButton;
     public RelativeLayout relExpandAreaFav, relTopAreaFav;
 
@@ -32,5 +30,7 @@ public class DatabaseViewHolder extends RecyclerView.ViewHolder {
         relExpandAreaFav = (RelativeLayout) itemView.findViewById(R.id.rel_bottom_area_fav);
         relTopAreaFav = (RelativeLayout)itemView.findViewById(R.id.rel_top_area_fav);
         browserImageButton = (ImageButton)itemView.findViewById(R.id.fav_open_in_browser_button);
+        //emptyList = (TextView)itemView.findViewById(R.id.empty_textview_database);
+
     }
 }

@@ -99,6 +99,11 @@ public class FavoritesDataSource {
         db.delete(DatabaseHelper.TABLE_FAVORITES, null,null);
     }
 
+    // TODO: properly handle removal of all saved items
+    public void removeAllTest(){
+        database.delete(DatabaseHelper.TABLE_FAVORITES, null, null);
+    }
+
 
     public int getBillCount() {
         String countQuery = "SELECT * FROM " + DatabaseHelper.TABLE_FAVORITES;

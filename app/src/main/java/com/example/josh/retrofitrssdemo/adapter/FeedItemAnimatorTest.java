@@ -72,15 +72,15 @@ public class FeedItemAnimatorTest extends DefaultItemAnimator {
     private void animateHeartButton(final RssAdapter.MyRssHolder holder) {
         AnimatorSet animatorSet = new AnimatorSet();
 
-        ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(holder.btnLike, "rotation", 0f, 360f);
+        ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(holder.favoriteButton, "rotation", 0f, 360f);
         rotationAnim.setDuration(300);
         rotationAnim.setInterpolator(ACCELERATE_INTERPOLATOR);
 
-        ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(holder.btnLike, "scaleX", 0.2f, 1f);
+        ObjectAnimator bounceAnimX = ObjectAnimator.ofFloat(holder.favoriteButton, "scaleX", 0.2f, 1f);
         bounceAnimX.setDuration(300);
         bounceAnimX.setInterpolator(OVERSHOOT_INTERPOLATOR);
 
-        ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(holder.btnLike, "scaleY", 0.2f, 1f);
+        ObjectAnimator bounceAnimY = ObjectAnimator.ofFloat(holder.favoriteButton, "scaleY", 0.2f, 1f);
         bounceAnimY.setDuration(300);
         bounceAnimY.setInterpolator(OVERSHOOT_INTERPOLATOR);
         bounceAnimY.addListener(new AnimatorListenerAdapter() {

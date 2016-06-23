@@ -66,7 +66,7 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         try {
             Date parsed = format.parse(billItem.getPubDate());
             TimeZone tz = TimeZone.getTimeZone("America/Detroit");
-            SimpleDateFormat destFormat = new SimpleDateFormat("EEE, MMM dd, yyyy hh:mm:ss a");
+            SimpleDateFormat destFormat = new SimpleDateFormat("EEE, MMM dd, yyyy hh:mm a");
             destFormat.setTimeZone(tz);
             String result = destFormat.format(parsed);
             holder.billPubDate.setText(result);
@@ -78,25 +78,25 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         dataSource.open(false);
 
         // Save item to database & check if item already saved
-        holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (dataSource.ifBillExists(billItem.getTitle())) {
-                    holder.favoriteButton.setImageResource(R.drawable.ic_favorite_empty);
-                    dataSource.removeBill(billItem.getTitle());
-                    Toast.makeText(v.getContext(), "Removed " + billItem.getTitle() + " from Favorites", Toast.LENGTH_SHORT).show();
-                } else {
-                    holder.favoriteButton.setImageResource(R.drawable.ic_favorite_full);
-                    dataSource.insertBill(billItem);
-                }
-            }
-        });
+//        holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (dataSource.ifBillExists(billItem.getTitle())) {
+//                    holder.favoriteButton.setImageResource(R.drawable.ic_favorite_empty);
+//                    dataSource.removeBill(billItem.getTitle());
+//                    Toast.makeText(v.getContext(), "Removed " + billItem.getTitle() + " from Favorites", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    holder.favoriteButton.setImageResource(R.drawable.ic_favorite_full);
+//                    dataSource.insertBill(billItem);
+//                }
+//            }
+//        });
         if (dataSource.ifBillExists(billItem.getTitle())) {
             holder.favoriteButton.setImageResource(R.drawable.ic_favorite_full);
-            holder.btnLike.setImageResource(R.drawable.ic_favorite_full);
+            //holder.btnLike.setImageResource(R.drawable.ic_favorite_full);
         } else {
             holder.favoriteButton.setImageResource(R.drawable.ic_favorite_empty);
-            holder.btnLike.setImageResource(R.drawable.ic_favorite_empty);
+            //holder.btnLike.setImageResource(R.drawable.ic_favorite_empty);
         }
 
         // Share item
@@ -119,7 +119,12 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
                 context.startActivity(intent);
             }
         });
-        // if list is empty, display message.
+
+        /*
+        If list is empty, display message.
+        Alternative option below:
+        https://www.reddit.com/r/androiddev/comments/3bjnxi/best_way_to_handle_recyclerview_empty_state/
+         */
         if (itemList.isEmpty()){
             holder.emptyText.setVisibility(View.VISIBLE);
         } else {
@@ -127,17 +132,17 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         }
 
         // save item to database with animation
-        holder.btnLike.setOnClickListener(new View.OnClickListener() {
+        holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int adapterPosition = holder.getAdapterPosition();
                 itemList.get(position);
                 if (dataSource.ifBillExists(billItem.getTitle())){
-                    holder.btnLike.setImageResource(R.drawable.ic_favorite_empty);
+                    holder.favoriteButton.setImageResource(R.drawable.ic_favorite_empty);
                     dataSource.removeBill(billItem.getTitle());
                     Toast.makeText(v.getContext(), "Removed " + billItem.getTitle() + " from Favorites", Toast.LENGTH_SHORT).show();
                 } else {
-                    holder.btnLike.setImageResource(R.drawable.ic_favorite_full);
+                    holder.favoriteButton.setImageResource(R.drawable.ic_favorite_full);
                     dataSource.insertBill(billItem);
                 }
                 notifyItemChanged(adapterPosition, ACTION_LIKE_BUTTON_CLICKED);
@@ -162,7 +167,7 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
     public class MyRssHolder extends RecyclerView.ViewHolder {
 
         public TextView billTitle, billDescription, billPubDate, emptyText;
-        public ImageButton favoriteButton, shareButton, browserButton, btnLike;
+        public ImageButton shareButton,favoriteButton, browserButton, btnLike;
         public CardView cardView;
 
         public MyRssHolder(View itemView) {
@@ -175,8 +180,7 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
             browserButton = (ImageButton) itemView.findViewById(R.id.open_in_browser_button);
             cardView = (CardView)itemView.findViewById(R.id.card_view_item_row);
             emptyText = (TextView)itemView.findViewById(R.id.empty_textview);
-            btnLike = (ImageButton)itemView.findViewById(R.id.button_like_anim);
-
+            //btnLike = (ImageButton)itemView.findViewById(R.id.button_like_anim);
         }
     }
 
@@ -191,5 +195,3 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         notifyItemRangeInserted(curSize, getItemCount());
     }
 }
-
-
