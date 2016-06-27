@@ -1,4 +1,4 @@
-package com.example.josh.retrofitrssdemo;
+package com.example.josh.retrofitrssdemo.tabLayoutTest;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.josh.retrofitrssdemo.R;
 import com.example.josh.retrofitrssdemo.database.CursorAdapter;
 import com.example.josh.retrofitrssdemo.database.FavoritesDataSource;
 import com.example.josh.retrofitrssdemo.model.Item;

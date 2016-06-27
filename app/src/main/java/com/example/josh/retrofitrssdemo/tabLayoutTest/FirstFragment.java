@@ -1,4 +1,4 @@
-package com.example.josh.retrofitrssdemo;
+package com.example.josh.retrofitrssdemo.tabLayoutTest;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.josh.retrofitrssdemo.R;
 import com.example.josh.retrofitrssdemo.adapter.RssAdapter;
 import com.example.josh.retrofitrssdemo.model.Rss;
 import com.example.josh.retrofitrssdemo.network.RssInterface;
