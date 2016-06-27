@@ -29,5 +29,12 @@
     <string name="expand_pref">Expand all cards</string>
     <string name="collapse_pref">Collapse all cards</string>
     <string name="prefTitle">Display</string>
+    <string name="preference_test">Preference Test</string>
+    <string name="dummy_pref_title">Dummy Preference</string>
+    <string name="dummy_pref_summary">I don\'t do anything!</string>
+    <string name="pref_header_dummy_title">Dummy Header Title</string>
+    <string name="pref_header_dummy_summary">This is a summary of my Dummy Header Settings</string>
+    <string name="card_color_summary">Change the color of cards in the RSS feed</string>
+    <string name="pref_color_dialog_title">Pick a color</string>
 
 </resources>

@@ -2,14 +2,18 @@ package com.example.josh.retrofitrssdemo.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +41,8 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
     public static final int VIEW_TYPE_DEFAULT = 1;
     public static final int VIEW_TYPE_LOADER = 2;
     public static final String ACTION_LIKE_BUTTON_CLICKED = "action_like_button_button";
+    private int expandedPosition = -1;
+
 
     public RssAdapter(Context context, List<Item> items) {
         this.context = context;
@@ -55,10 +61,14 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final MyRssHolder holder, final int position) {
+    public void onBindViewHolder(final MyRssHolder holder, int position) {
+        position = holder.getAdapterPosition();
+
+
         final Item billItem = itemList.get(position);
         holder.billTitle.setText(billItem.getTitle());
         holder.billDescription.setText(billItem.getDescription());
+
 
         // Converting Date and Time
         SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss z");
@@ -121,23 +131,22 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
         });
 
         /*
-        If list is empty, display message.
-        Alternative option below:
+        If list is empty, display message. Alternative option below:
         https://www.reddit.com/r/androiddev/comments/3bjnxi/best_way_to_handle_recyclerview_empty_state/
          */
-        if (itemList.isEmpty()){
-            holder.emptyText.setVisibility(View.VISIBLE);
-        } else {
-            holder.emptyText.setVisibility(View.GONE);
-        }
+//        if (itemList.isEmpty()) {
+//            holder.emptyText.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.emptyText.setVisibility(View.GONE);
+//        }
 
         // save item to database with animation
         holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int adapterPosition = holder.getAdapterPosition();
-                itemList.get(position);
-                if (dataSource.ifBillExists(billItem.getTitle())){
+                itemList.get(holder.getAdapterPosition());
+                if (dataSource.ifBillExists(billItem.getTitle())) {
                     holder.favoriteButton.setImageResource(R.drawable.ic_favorite_empty);
                     dataSource.removeBill(billItem.getTitle());
                     Toast.makeText(v.getContext(), "Removed " + billItem.getTitle() + " from Favorites", Toast.LENGTH_SHORT).show();
@@ -148,6 +157,49 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
                 notifyItemChanged(adapterPosition, ACTION_LIKE_BUTTON_CLICKED);
             }
         });
+
+
+        /*
+        Expand/Collapse V1, layout xml set to "gone"
+         */
+//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//        if (sharedPreferences.getBoolean("pref_collapse_all", true)) {
+//            holder.relTopArea.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (holder.relExpandArea.getVisibility() == View.GONE) {
+//                        holder.relExpandArea.setVisibility(View.VISIBLE);
+//                    } else if (holder.relExpandArea.getVisibility() == View.VISIBLE) {
+//                        holder.relExpandArea.setVisibility(View.GONE);
+//                    }
+//                }
+//            });
+//        }
+
+
+
+        /*
+        Expand/Collapse V2
+         */
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPref.getBoolean("pref_collapse_all", true)) {
+            if (position == expandedPosition) {
+                holder.relExpandArea.setVisibility(View.VISIBLE);
+            } else {
+                holder.relExpandArea.setVisibility(View.GONE);
+            }
+            holder.relTopArea.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    if (expandedPosition >= 0) {
+                        int prev = expandedPosition;
+                        notifyItemChanged(prev);
+                    }
+                    expandedPosition = holder.getAdapterPosition();
+                    notifyItemChanged(expandedPosition);
+                }
+            });
+        }
     }
 
     @Override
@@ -167,20 +219,46 @@ public class RssAdapter extends RecyclerView.Adapter<RssAdapter.MyRssHolder> {
     public class MyRssHolder extends RecyclerView.ViewHolder {
 
         public TextView billTitle, billDescription, billPubDate, emptyText;
-        public ImageButton shareButton,favoriteButton, browserButton, btnLike;
+        public ImageButton shareButton, favoriteButton, browserButton, btnLike;
         public CardView cardView;
+        public RelativeLayout relExpandArea, relTopArea;
+        public SharedPreferences mSharedPreferences;
+        public FrameLayout rootFrame;
 
         public MyRssHolder(View itemView) {
             super(itemView);
             billTitle = (TextView) itemView.findViewById(R.id.bill_title);
             billDescription = (TextView) itemView.findViewById(R.id.bill_description);
             billPubDate = (TextView) itemView.findViewById(R.id.bill_pub_date);
+            //emptyText = (TextView) itemView.findViewById(R.id.empty_textview);
             favoriteButton = (ImageButton) itemView.findViewById(R.id.heart_saved);
             shareButton = (ImageButton) itemView.findViewById(R.id.share_button);
             browserButton = (ImageButton) itemView.findViewById(R.id.open_in_browser_button);
-            cardView = (CardView)itemView.findViewById(R.id.card_view_item_row);
-            emptyText = (TextView)itemView.findViewById(R.id.empty_textview);
             //btnLike = (ImageButton)itemView.findViewById(R.id.button_like_anim);
+            cardView = (CardView) itemView.findViewById(R.id.card_view_item_row);
+            relExpandArea = (RelativeLayout) itemView.findViewById(R.id.bottom_layout_item_row);
+            relTopArea = (RelativeLayout) itemView.findViewById(R.id.top_layout_item_row);
+            rootFrame = (FrameLayout) itemView.findViewById(R.id.frame_root);
+
+            /*
+            Expand/Collapse V1, layout xml set to "gone"
+             */
+//            mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+//            if (mSharedPreferences.getBoolean("pref_collapse_all", true)) {
+//                relExpandArea.setVisibility(View.GONE);
+//            } else {
+//                relExpandArea.setVisibility(View.VISIBLE);
+//            }
+
+            /*
+            Expand/Collapse V2, layout xml set to "gone"
+             */
+            mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            if (mSharedPreferences.getBoolean("pref_collapse_all", true)){
+                relExpandArea.setVisibility(View.GONE);
+            } else {
+                relExpandArea.setVisibility(View.VISIBLE);
+            }
         }
     }
 

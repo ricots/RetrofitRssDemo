@@ -2,15 +2,14 @@ package com.example.josh.retrofitrssdemo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.CoordinatorLayout;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +24,7 @@ import com.example.josh.retrofitrssdemo.adapter.FeedItemAnimatorTest;
 import com.example.josh.retrofitrssdemo.adapter.RssAdapter;
 import com.example.josh.retrofitrssdemo.model.Rss;
 import com.example.josh.retrofitrssdemo.network.RssInterface;
+import com.example.josh.retrofitrssdemo.tabLayoutTest.TabActivityTest;
 
 import java.util.ArrayList;
 
@@ -41,12 +41,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public static final String KEY_DATA = "DATAA";
     public static final String TAG = MainActivity.class.getSimpleName();
     RecyclerView recyclerView;
-    RecyclerView.LayoutManager mLayoutManager;
     SwipeRefreshLayout refreshLayout;
     ProgressBar progressBar;
     RssAdapter adapter;
     Rss rssList;
-    CoordinatorLayout clContent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,13 +55,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setSupportActionBar(toolbar);
 
         recyclerView = (RecyclerView)findViewById(R.id.recycler);
-        mLayoutManager = new LinearLayoutManager(this);
         refreshLayout = (SwipeRefreshLayout)findViewById(R.id.refresh);
-        clContent = (CoordinatorLayout)findViewById(R.id.content_main);
-
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new FeedItemAnimatorTest());
-
+        //recyclerView.addItemDecoration(new DividerItemDecoration(this));
 
         if (refreshLayout != null) {
             refreshLayout.setOnRefreshListener(MainActivity.this);
@@ -82,6 +78,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         } else {
             getData();
+        }
+
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPreferences.getBoolean("pref_collapse_all", true)){
+            Toast.makeText(MainActivity.this, "Collapse is Checked", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(MainActivity.this, "NOT CHECKED", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -112,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.INVISIBLE);
+        //recyclerView.setVisibility(View.INVISIBLE);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -140,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 }
                 progressBar.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
-                recyclerView.setVisibility(View.VISIBLE);
+                //recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -168,25 +172,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        switch (AppCompatDelegate.getDefaultNightMode()) {
-            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
-                menu.findItem(R.id.menu_night_mode_system).setChecked(true);
-                break;
-            case AppCompatDelegate.MODE_NIGHT_AUTO:
-                menu.findItem(R.id.menu_night_mode_auto).setChecked(true);
-                break;
-            case AppCompatDelegate.MODE_NIGHT_YES:
-                menu.findItem(R.id.menu_night_mode_night).setChecked(true);
-                break;
-            case AppCompatDelegate.MODE_NIGHT_NO:
-                menu.findItem(R.id.menu_night_mode_day).setChecked(true);
-                break;
-        }
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_favorites:
@@ -197,29 +182,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Intent intent1 = new Intent(MainActivity.this, TabActivityTest.class);
                 startActivity(intent1);
                 return true;
-            case R.id.menu_night_mode_system:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                break;
-            case R.id.menu_night_mode_day:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                break;
-            case R.id.menu_night_mode_night:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                break;
-            case R.id.menu_night_mode_auto:
-                setNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                break;
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void setNightMode(@AppCompatDelegate.NightMode int nightMode) {
-        AppCompatDelegate.setDefaultNightMode(nightMode);
-
-        if (Build.VERSION.SDK_INT >= 11) {
-            recreate();
-        }
+    private void setExpandAllCards() {
+        Toast.makeText(MainActivity.this, "Expand all cards", Toast.LENGTH_SHORT).show();
     }
+
 }
 
         /*

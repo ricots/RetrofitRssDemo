@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="display_category_key"
+        android:title="Appearance">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_dummy_one"
+            android:summary="@string/dummy_pref_summary"
+            android:title="@string/dummy_pref_title"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_collapse_all"
+            android:summary="@string/collapse_pref"
+            android:title="@string/collapse_pref"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="display_category_key"
+        android:title="General Settings">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_dummy_two"
+            android:summary="@string/dummy_pref_summary"
+            android:title="Dummy Preference 2"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_dummy_three"
+            android:summary="@string/dummy_pref_summary"
+            android:title="Dummy Preference 3"/>
+    </PreferenceCategory>
+</PreferenceScreen>
